@@ -1,0 +1,19 @@
+<?xml version="1.0"?>
+<package>
+  <name>robospect_common</name>
+  <version>1.0.0</version>
+  <description>The robospect_common package. It contains robospect common packages</description>
+  
+  <maintainer email="info@robotnik.es">Robotnik</maintainer>
+
+  <license>BSD</license>
+
+  <url type="website">http://www.robotnik.es</url>
+
+  <author email="dcarbonell@robotnik.es">Dani Carbonell</author>
+
+  <buildtool_depend>catkin</buildtool_depend>
+
+  <export><metapackage/></export>
+
+</package>
