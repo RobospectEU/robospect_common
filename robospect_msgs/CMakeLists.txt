@@ -28,11 +28,13 @@ add_message_files(DIRECTORY msg
 )
 
 ## Generate services in the 'srv' folder
-#add_service_files(
-#	DIRECTORY srv
-#	FILES
-	
-#)
+add_service_files(
+	DIRECTORY srv
+	FILES
+	DetectCrack.srv
+	GetStereo.srv
+	ScanProfile.srv
+)
 
 #add_action_files(DIRECTORY action 
 #	FILES 

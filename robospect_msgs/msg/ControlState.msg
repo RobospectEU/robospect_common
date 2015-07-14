@@ -11,8 +11,8 @@ int32 MEASURE_CRACK=9				# 9. UltraSonic Sensors take measurement
 int32 CAPTURE_3D_CRACK_SNAPSHOT_OF_SENSOR=10	# 10. Stereo Cameras take stereo-image of sensor onto crack
 int32 ROBOT_MOVING_TO_NEXT_POINT=11		# 11. Robot moves to next position and proceeds 1 step*
 
-# Robot status
-
+# Robot general state
+State state
 
 # Robot mission state
 int32 mission_state
