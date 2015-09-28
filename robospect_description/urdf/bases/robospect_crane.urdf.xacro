@@ -1,0 +1,36 @@
+<?xml version="1.0"?>
+<robot name="robospect" xmlns:xacro="http://www.ros.org/wiki/xacro">
+
+
+  <!-- <xacro:include filename="$(find robospect_description)/urdf/bases/robospect_crane.gazebo.xacro" /> -->
+
+  <xacro:macro name="robospect_crane">
+
+  <!-- FIRST_LINK -->
+  
+  <link name="first_link">
+    <inertial>
+      <mass value="125.0" />
+      <origin xyz="0 0 0" />
+      <inertia  ixx="1.391" ixy="0.004"  ixz="0.0"  iyy="6.853"  iyz="0.0"  izz="6.125" />
+    </inertial>
+    <visual>
+       <origin xyz="0 0 0" rpy="0 0 0" />
+       <geometry>
+	        <mesh filename="package://robospect_description/meshes/bases/robospect_crane_1.stl"/>
+       </geometry>
+       <material name="blue">
+          <color rgba="0.1 0.2 0.8 1"/>
+       </material>
+    </visual>
+    <collision>
+       <origin xyz="0 0 0" rpy="0 0 0 " />
+       <geometry>
+         <mesh filename="package://robospect_description/meshes/bases/robospect_crane_1.stl"/>
+       </geometry>
+    </collision>
+  </link>
+
+
+  </xacro:macro>
+</robot>

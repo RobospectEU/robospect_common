@@ -4,7 +4,7 @@
 
   <xacro:include filename="$(find robospect_description)/urdf/bases/robospect_base.gazebo.xacro" />
 
-  <xacro:macro name="robospect_base" params="name publish_bf hq">
+  <xacro:macro name="robospect_base" params="name publish_bf">
 
   <!-- Robot mechanical and motor parameters -->
   <xacro:property name="PI" value="3.1415926535897931"/>
@@ -30,7 +30,7 @@
     </link>
 
     <joint name="base_footprint_joint" type="fixed">
-      <origin xyz="0 0 0.235" rpy="0 0 0" />  <!-- height is the clearance -->
+      <origin xyz="0 0 0.296166007" rpy="0 0 0" />  <!-- height is the clearance -->
       <parent link="base_footprint"/>
       <child link="base_link" />
     </joint>
@@ -44,23 +44,16 @@
       <inertia  ixx="1.391" ixy="0.004"  ixz="0.0"  iyy="6.853"  iyz="0.0"  izz="6.125" />
     </inertial>
     <visual>
-       <origin xyz="0 0 0" rpy="0 0 0" />
-       <xacro:if value="${hq}">
+       <origin xyz="0 0 -0.17" rpy="0 0 ${PI/2}" />
        <geometry>
-	     <mesh filename="package://robospect_description/meshes/bases/robospect_chassis.stl"/>
+	       <mesh filename="package://robospect_description/meshes/bases/robospect_chassis.stl"/>
        </geometry>
-       </xacro:if>
-       <xacro:unless value="${hq}">
-       <geometry>
-	     <mesh filename="package://robospect_description/meshes/bases/robospect_chassis.stl"/>
-       </geometry>
-       </xacro:unless>
-       <material name="darkgrey">
-         <color rgba="0.1 0.1 0.1 1"/>
+       <material name="blue">
+         <color rgba="0.0 0.4 0.9 1.0"/>
        </material>
     </visual>
     <collision>
-       <origin xyz="0 0 0" rpy="0 0 0 " />
+       <origin xyz="0 0 -0.17" rpy="0 0 ${PI/2}" />
        <geometry>
          <mesh filename="package://robospect_description/meshes/bases/robospect_chassis.stl"/>
        </geometry>
