@@ -44,18 +44,18 @@
       <inertia  ixx="1.391" ixy="0.004"  ixz="0.0"  iyy="6.853"  iyz="0.0"  izz="6.125" />
     </inertial>
     <visual>
-       <origin xyz="0 0 -0.17" rpy="0 0 ${PI/2}" />
+       <origin xyz="0 0 0" rpy="0 0 0" />
        <geometry>
-	       <mesh filename="package://robospect_description/meshes/bases/robospect_chassis.stl"/>
+	       <mesh filename="package://robospect_description/meshes/bases/robospect_base_chassis.STL"/>
        </geometry>
        <material name="blue">
          <color rgba="0.0 0.4 0.9 1.0"/>
        </material>
     </visual>
     <collision>
-       <origin xyz="0 0 -0.17" rpy="0 0 ${PI/2}" />
+       <origin xyz="0 0 0" rpy="0 0 0" />
        <geometry>
-         <mesh filename="package://robospect_description/meshes/bases/robospect_chassis.stl"/>
+         <mesh filename="package://robospect_description/meshes/bases/robospect_base_chassis.STL"/>
        </geometry>
     </collision>
   </link>

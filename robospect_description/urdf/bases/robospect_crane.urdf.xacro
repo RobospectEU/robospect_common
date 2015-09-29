@@ -6,8 +6,31 @@
 
   <xacro:macro name="robospect_crane">
 
+  <!-- FIRST_JOINT -->
+
+    <joint name="base_first_joint" type="revolute">
+      <axis xyz="0 0 1"/>
+      <limit effort="1000.0" lower="-${90 * PI / 180}" upper="${90 * PI / 180}" velocity="0.5"/>
+      <origin xyz="-0.046851 0 0.3" rpy="0 0 0" />  <!-- height is the clearance -->
+      <parent link="base_link"/>
+      <child link="first_link"/>
+    </joint>
+
+    <transmission name="base_first_joint_trans">
+      <type>transmission_interface/SimpleTransmission</type>
+      <joint name="base_first_joint">
+        <hardwareInterface>EffortJointInterface</hardwareInterface>
+      </joint>
+      <actuator name="base_first_joint_act">
+        <!-- This hardwareInterface element exists for compatibility
+             with ROS Hydro. -->
+        <hardwareInterface>EffortJointInterface</hardwareInterface>
+        <mechanicalReduction>1</mechanicalReduction>
+      </actuator>
+    </transmission>
+
   <!-- FIRST_LINK -->
-  
+
   <link name="first_link">
     <inertial>
       <mass value="125.0" />
@@ -17,20 +40,70 @@
     <visual>
        <origin xyz="0 0 0" rpy="0 0 0" />
        <geometry>
-	        <mesh filename="package://robospect_description/meshes/bases/robospect_crane_1.stl"/>
+	        <mesh filename="package://robospect_description/meshes/bases/robospect_first.STL" scale="1 1 1"/>
        </geometry>
-       <material name="blue">
-          <color rgba="0.1 0.2 0.8 1"/>
+       <material name="grey">
+          <color rgba="0.8 0.8 0.8 0.95"/>
        </material>
     </visual>
     <collision>
        <origin xyz="0 0 0" rpy="0 0 0 " />
        <geometry>
-         <mesh filename="package://robospect_description/meshes/bases/robospect_crane_1.stl"/>
+         <mesh filename="package://robospect_description/meshes/bases/robospect_first.STL" scale="1 1 1"/>
        </geometry>
     </collision>
   </link>
 
 
+
+
+  <!-- SECOND_JOINT -->
+
+    <joint name="base_second_joint" type="prismatic">
+      <axis xyz="0 0 1"/>
+      <limit effort="1000.0" lower="0.0" upper="2.0" velocity="0.5"/>
+      <origin xyz="-0.3 0 1.25" rpy="0 0 0" />  <!-- height is the clearance -->
+      <parent link="first_link"/>
+      <child link="second_link"/>
+    </joint>
+
+    <transmission name="base_second_joint_trans">
+      <type>transmission_interface/SimpleTransmission</type>
+      <joint name="base_second_joint">
+        <hardwareInterface>EffortJointInterface</hardwareInterface>
+      </joint>
+      <actuator name="base_second_joint_act">
+        <!-- This hardwareInterface element exists for compatibility
+             with ROS Hydro. -->
+        <hardwareInterface>EffortJointInterface</hardwareInterface>
+        <mechanicalReduction>1</mechanicalReduction>
+      </actuator>
+    </transmission>
+
+  <!-- SECOND_LINK -->
+
+  <link name="second_link">
+    <inertial>
+      <mass value="125.0" />
+      <origin xyz="0 0 0" />
+      <inertia  ixx="1.391" ixy="0.004"  ixz="0.0"  iyy="6.853"  iyz="0.0"  izz="6.125" />
+    </inertial>
+    <visual>
+       <origin xyz="0 0 0" rpy="0 0 0" />
+       <geometry>
+	        <mesh filename="package://robospect_description/meshes/bases/robospect_second.STL" scale="1 1 1"/>
+       </geometry>
+       <material name="blue">
+       </material>
+    </visual>
+    <collision>
+       <origin xyz="0 0 0" rpy="0 0 0 " />
+       <geometry>
+         <mesh filename="package://robospect_description/meshes/bases/robospect_second.STL" scale="1 1 1"/>
+       </geometry>
+    </collision>
+  </link>
+
   </xacro:macro>
+
 </robot>

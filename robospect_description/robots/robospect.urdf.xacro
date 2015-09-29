@@ -12,7 +12,7 @@
 	<xacro:include filename="$(find robospect_description)/urdf/bases/robospect_base.urdf.xacro" />
 
 	<!-- Import Robospect Crane -->
-	<xacro:include filename="$(find robospect_description)/urdf/bases/robospect_base.urdf.xacro" />
+	<xacro:include filename="$(find robospect_description)/urdf/bases/robospect_crane.urdf.xacro" />
 
 	<!-- Import Robospect Wheels -->
 	<xacro:include filename="$(find robospect_description)/urdf/wheels/suspension_wheel.urdf.xacro" />
@@ -40,7 +40,9 @@
 	<!-- Here we create the robot elements using the xacro:macros imported at the beggining of this file -->
 
 	<!-- Genie base -->
-	<xacro:robospect_base name="robospect" publish_bf="true" />
+	<xacro:robospect_base name="robospect_base" publish_bf="true" />
+
+	<xacro:robospect_crane/>
 
 	<!-- Gazebo ros control pluggins -->
 	<xacro:ros_control/>
@@ -97,5 +99,9 @@
     <plugin name="gazebo_ros_control" filename="libgazebo_ros_control.so"/>
   </gazebo -->
   <!-- ros control plugin -->
+
+
+
+
 
 </robot>
