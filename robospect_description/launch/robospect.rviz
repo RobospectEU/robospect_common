@@ -82,6 +82,21 @@ Visualization Manager:
           Alpha: 1
           Show Axes: false
           Show Trail: false
+        fifth_link:
+          Alpha: 1
+          Show Axes: false
+          Show Trail: false
+          Value: true
+        first_link:
+          Alpha: 1
+          Show Axes: false
+          Show Trail: false
+          Value: true
+        fourth_link:
+          Alpha: 1
+          Show Axes: false
+          Show Trail: false
+          Value: true
         imu_link:
           Alpha: 1
           Show Axes: false
@@ -131,6 +146,31 @@ Visualization Manager:
           Alpha: 1
           Show Axes: false
           Show Trail: false
+        second_link:
+          Alpha: 1
+          Show Axes: false
+          Show Trail: false
+          Value: true
+        seventh_link:
+          Alpha: 1
+          Show Axes: false
+          Show Trail: false
+          Value: true
+        sixth_aux_link:
+          Alpha: 1
+          Show Axes: false
+          Show Trail: false
+          Value: true
+        sixth_link:
+          Alpha: 1
+          Show Axes: false
+          Show Trail: false
+          Value: true
+        third_link:
+          Alpha: 1
+          Show Axes: false
+          Show Trail: false
+          Value: true
       Name: RobotModel
       Robot Description: robot_description
       TF Prefix: ""
@@ -152,6 +192,12 @@ Visualization Manager:
           Value: true
         camera_tilt_link:
           Value: true
+        fifth_link:
+          Value: true
+        first_link:
+          Value: true
+        fourth_link:
+          Value: true
         imu_link:
           Value: true
         left_front_axle_carrier:
@@ -174,6 +220,16 @@ Visualization Manager:
           Value: true
         right_steering_link:
           Value: true
+        second_link:
+          Value: true
+        seventh_link:
+          Value: true
+        sixth_aux_link:
+          Value: true
+        sixth_link:
+          Value: true
+        third_link:
+          Value: true
       Marker Scale: 1
       Name: TF
       Show Arrows: true
@@ -186,21 +242,31 @@ Visualization Manager:
               camera_pan_link:
                 camera_tilt_link:
                   {}
+            first_link:
+              second_link:
+                third_link:
+                  fourth_link:
+                    fifth_link:
+                      sixth_aux_link:
+                        {}
+                      sixth_link:
+                        seventh_link:
+                          {}
             imu_link:
               {}
-            left_rear_axle_carrier:
-              left_rear_wheel:
+            left_front_axle_carrier:
+              left_front_wheel:
                 {}
             left_steering_link:
-              left_front_axle_carrier:
-                left_front_wheel:
+              left_rear_axle_carrier:
+                left_rear_wheel:
                   {}
-            right_rear_axle_carrier:
-              right_rear_wheel:
+            right_front_axle_carrier:
+              right_front_wheel:
                 {}
             right_steering_link:
-              right_front_axle_carrier:
-                right_front_wheel:
+              right_rear_axle_carrier:
+                right_rear_wheel:
                   {}
       Update Interval: 0
       Value: true
@@ -227,23 +293,22 @@ Visualization Manager:
   Value: true
   Views:
     Current:
-      Class: rviz/Orbit
-      Distance: 2.66642
+      Class: rviz/FPS
       Enable Stereo Rendering:
         Stereo Eye Separation: 0.06
         Stereo Focal Distance: 1
         Swap Stereo Eyes: false
         Value: false
-      Focal Point:
-        X: -0.00122232
-        Y: 0.0436333
-        Z: 0.160592
       Name: Current View
       Near Clip Distance: 0.01
-      Pitch: 0.275397
+      Pitch: -0.064601
+      Position:
+        X: 4.78661
+        Y: 0.325073
+        Z: 1.58279
       Target Frame: <Fixed Frame>
-      Value: Orbit (rviz)
-      Yaw: 4.85039
+      Value: FPS (rviz)
+      Yaw: 4.69199
     Saved: ~
 Window Geometry:
   Displays:

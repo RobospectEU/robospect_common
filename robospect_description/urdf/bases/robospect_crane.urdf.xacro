@@ -10,7 +10,7 @@
 
     <joint name="base_first_joint" type="revolute">
       <axis xyz="0 0 1"/>
-      <limit effort="1000.0" lower="-${90 * PI / 180}" upper="${90 * PI / 180}" velocity="0.5"/>
+      <limit effort="1000.0" lower="-${177.5 * PI / 180}" upper="${177.5 * PI / 180}" velocity="0.5"/>
       <origin xyz="-0.046851 0 0.3" rpy="0 0 0" />  <!-- height is the clearance -->
       <parent link="base_link"/>
       <child link="first_link"/>
@@ -103,6 +103,346 @@
        </geometry>
     </collision>
   </link>
+
+
+
+    <!-- THIRD_JOINT -->
+
+      <joint name="base_third_joint" type="revolute">
+        <axis xyz="0 1 0"/>
+        <limit effort="1000.0" lower="-1.2" upper="0.1" velocity="0.5"/>
+        <origin xyz="0 0 0" rpy="0 0 0" />  <!-- height is the clearance -->
+        <parent link="second_link"/>
+        <child link="third_link"/>
+      </joint>
+
+      <transmission name="base_third_joint_trans">
+        <type>transmission_interface/SimpleTransmission</type>
+        <joint name="base_third_joint">
+          <hardwareInterface>EffortJointInterface</hardwareInterface>
+        </joint>
+        <actuator name="base_third_joint_act">
+          <!-- This hardwareInterface element exists for compatibility
+               with ROS Hydro. -->
+          <hardwareInterface>EffortJointInterface</hardwareInterface>
+          <mechanicalReduction>1</mechanicalReduction>
+        </actuator>
+      </transmission>
+
+    <!-- THIRD_LINK -->
+
+    <link name="third_link">
+      <inertial>
+        <mass value="125.0" />
+        <origin xyz="0 0 0" />
+        <inertia  ixx="1.391" ixy="0.004"  ixz="0.0"  iyy="6.853"  iyz="0.0"  izz="6.125" />
+      </inertial>
+      <visual>
+         <origin xyz="0 0 0" rpy="0 0 0" />
+         <geometry>
+  	        <mesh filename="package://robospect_description/meshes/bases/robospect_third.STL" scale="1 1 1"/>
+         </geometry>
+         <material name="blue">
+         </material>
+      </visual>
+      <collision>
+         <origin xyz="0 0 0" rpy="0 0 0 " />
+         <geometry>
+           <mesh filename="package://robospect_description/meshes/bases/robospect_third.STL" scale="1 1 1"/>
+         </geometry>
+      </collision>
+    </link>
+
+
+    <!-- FOURTH_JOINT -->
+
+      <joint name="base_fourth_joint" type="prismatic">
+        <axis xyz="1 0 0"/>
+        <limit effort="1000.0" lower="0" upper="1.8" velocity="0.5"/>
+        <origin xyz="3.0 0 0" rpy="0 0 0" />  <!-- height is the clearance -->
+        <parent link="third_link"/>
+        <child link="fourth_link"/>
+      </joint>
+
+      <transmission name="base_fourth_joint_trans">
+        <type>transmission_interface/SimpleTransmission</type>
+        <joint name="base_fourth_joint">
+          <hardwareInterface>EffortJointInterface</hardwareInterface>
+        </joint>
+        <actuator name="base_fourth_joint_act">
+          <!-- This hardwareInterface element exists for compatibility
+               with ROS Hydro. -->
+          <hardwareInterface>EffortJointInterface</hardwareInterface>
+          <mechanicalReduction>1</mechanicalReduction>
+        </actuator>
+      </transmission>
+
+    <!-- FOURTH_LINK -->
+
+    <link name="fourth_link">
+      <inertial>
+        <mass value="125.0" />
+        <origin xyz="0 0 0" />
+        <inertia  ixx="1.391" ixy="0.004"  ixz="0.0"  iyy="6.853"  iyz="0.0"  izz="6.125" />
+      </inertial>
+      <visual>
+         <origin xyz="0 0 0" rpy="0 0 0" />
+         <geometry>
+            <mesh filename="package://robospect_description/meshes/bases/robospect_fourth.STL" scale="1 1 1"/>
+         </geometry>
+         <material name="blue">
+         </material>
+      </visual>
+      <collision>
+         <origin xyz="0 0 0" rpy="0 0 0 " />
+         <geometry>
+           <mesh filename="package://robospect_description/meshes/bases/robospect_fourth.STL" scale="1 1 1"/>
+         </geometry>
+      </collision>
+    </link>
+
+
+    <!-- FIFTH_JOINT -->
+
+      <joint name="base_fifth_joint" type="revolute">
+        <axis xyz="0 1 0"/>
+        <limit effort="1000.0" lower="-0.5" upper="0.6" velocity="0.5"/>
+        <origin xyz="0 0 0" rpy="0 0 0" />  <!-- height is the clearance -->
+        <parent link="fourth_link"/>
+        <child link="fifth_link"/>
+      </joint>
+
+      <transmission name="base_fifth_joint_trans">
+        <type>transmission_interface/SimpleTransmission</type>
+        <joint name="base_fifth_joint">
+          <hardwareInterface>EffortJointInterface</hardwareInterface>
+        </joint>
+        <actuator name="base_fifth_joint_act">
+          <!-- This hardwareInterface element exists for compatibility
+               with ROS Hydro. -->
+          <hardwareInterface>EffortJointInterface</hardwareInterface>
+          <mechanicalReduction>1</mechanicalReduction>
+        </actuator>
+      </transmission>
+
+    <!-- FIFTH_LINK -->
+
+    <link name="fifth_link">
+      <inertial>
+        <mass value="125.0" />
+        <origin xyz="0 0 0" />
+        <inertia  ixx="1.391" ixy="0.004"  ixz="0.0"  iyy="6.853"  iyz="0.0"  izz="6.125" />
+      </inertial>
+      <visual>
+         <origin xyz="0 0 0" rpy="0 0 0" />
+         <geometry>
+            <mesh filename="package://robospect_description/meshes/bases/robospect_fifth.STL" scale="1 1 1"/>
+         </geometry>
+         <material name="blue">
+         </material>
+      </visual>
+      <collision>
+         <origin xyz="0 0 0" rpy="0 0 0 " />
+         <geometry>
+           <mesh filename="package://robospect_description/meshes/bases/robospect_fifth.STL" scale="1 1 1"/>
+         </geometry>
+      </collision>
+    </link>
+
+    <!-- SIXTH_JOINT -->
+
+      <joint name="base_sixth_joint" type="revolute">
+        <axis xyz="0 1 0"/>
+        <limit effort="1000.0" lower="0" upper="1.5" velocity="0.5"/>
+        <origin xyz="0.25415 0 0" rpy="0 0 0" />  <!-- height is the clearance -->
+        <parent link="fifth_link"/>
+        <child link="sixth_link"/>
+      </joint>
+
+      <transmission name="base_sixth_joint_trans">
+        <type>transmission_interface/SimpleTransmission</type>
+        <joint name="base_sixth_joint">
+          <hardwareInterface>EffortJointInterface</hardwareInterface>
+        </joint>
+        <actuator name="base_sixth_joint_act">
+          <!-- This hardwareInterface element exists for compatibility
+               with ROS Hydro. -->
+          <hardwareInterface>EffortJointInterface</hardwareInterface>
+          <mechanicalReduction>1</mechanicalReduction>
+        </actuator>
+      </transmission>
+
+    <!-- SIXTH_LINK -->
+
+    <link name="sixth_link">
+      <inertial>
+        <mass value="125.0" />
+        <origin xyz="0 0 0" />
+        <inertia  ixx="1.391" ixy="0.004"  ixz="0.0"  iyy="6.853"  iyz="0.0"  izz="6.125" />
+      </inertial>
+      <visual>
+         <origin xyz="0 0 0" rpy="0 0 0" />
+         <geometry>
+            <mesh filename="package://robospect_description/meshes/bases/robospect_sixth.STL" scale="1 1 1"/>
+         </geometry>
+         <material name="blue">
+         </material>
+      </visual>
+      <collision>
+         <origin xyz="0 0 0" rpy="0 0 0 " />
+         <geometry>
+           <mesh filename="package://robospect_description/meshes/bases/robospect_sixth.STL" scale="1 1 1"/>
+         </geometry>
+      </collision>
+    </link>
+
+
+    <!-- SIXTH_AUX_JOINT -->
+
+      <joint name="base_sixth_aux_joint" type="revolute">
+        <axis xyz="0 1 0"/>
+        <limit effort="1000.0" lower="0" upper="1.3" velocity="0.5"/>
+        <origin xyz="0.1177 0 -0.26422" rpy="0 0 0" />  <!-- height is the clearance -->
+        <parent link="fifth_link"/>
+        <child link="sixth_aux_link"/>
+        <mimic joint="base_sixth_joint"/>
+      </joint>
+
+      <transmission name="base_sixth_aux_joint_trans">
+        <type>transmission_interface/SimpleTransmission</type>
+        <joint name="base_sixth_joint">
+          <hardwareInterface>EffortJointInterface</hardwareInterface>
+        </joint>
+        <actuator name="base_sixth_aux_joint_act">
+          <!-- This hardwareInterface element exists for compatibility
+               with ROS Hydro. -->
+          <hardwareInterface>EffortJointInterface</hardwareInterface>
+          <mechanicalReduction>1</mechanicalReduction>
+        </actuator>
+      </transmission>
+
+    <!-- SIXTH_AUX_LINK -->
+
+    <link name="sixth_aux_link">
+      <inertial>
+        <mass value="125.0" />
+        <origin xyz="0 0 0" />
+        <inertia  ixx="1.391" ixy="0.004"  ixz="0.0"  iyy="6.853"  iyz="0.0"  izz="6.125" />
+      </inertial>
+      <visual>
+         <origin xyz="0 0 0" rpy="0 0 0" />
+         <geometry>
+            <mesh filename="package://robospect_description/meshes/bases/robospect_sixth.STL" scale="1 1 1"/>
+         </geometry>
+         <material name="blue">
+         </material>
+      </visual>
+      <collision>
+         <origin xyz="0 0 0" rpy="0 0 0 " />
+         <geometry>
+           <mesh filename="package://robospect_description/meshes/bases/robospect_sixth.STL" scale="1 1 1"/>
+         </geometry>
+      </collision>
+    </link>
+
+
+
+    <!-- SEVENTH_JOINT -->
+
+      <joint name="base_seventh_joint" type="revolute">
+        <axis xyz="0 0 1"/>
+        <limit effort="1000.0" lower="-${90 * PI / 180}" upper="${90 * PI / 180}" velocity="0.5"/>
+        <origin xyz="2.0 0 0" rpy="${90 * PI / 180} 0 0" />  <!-- height is the clearance -->
+        <parent link="sixth_link"/>
+        <child link="seventh_link"/>
+        <mimic joint="base_sixth_joint" offset="-0.485"/>
+      </joint>
+
+      <transmission name="base_seventh_joint_trans">
+        <type>transmission_interface/SimpleTransmission</type>
+        <joint name="base_seventh_joint">
+          <hardwareInterface>EffortJointInterface</hardwareInterface>
+        </joint>
+        <actuator name="base_seventh_joint_act">
+          <!-- This hardwareInterface element exists for compatibility
+               with ROS Hydro. -->
+          <hardwareInterface>EffortJointInterface</hardwareInterface>
+          <mechanicalReduction>1</mechanicalReduction>
+        </actuator>
+      </transmission>
+
+    <!-- SEVENTH_LINK -->
+
+    <link name="seventh_link">
+      <inertial>
+        <mass value="125.0" />
+        <origin xyz="0 0 0" />
+        <inertia  ixx="1.391" ixy="0.004"  ixz="0.0"  iyy="6.853"  iyz="0.0"  izz="6.125" />
+      </inertial>
+      <visual>
+         <origin xyz="0 0 0" rpy="0 0 0" />
+         <geometry>
+            <mesh filename="package://robospect_description/meshes/bases/robospect_seventh.STL" scale="1 1 1"/>
+         </geometry>
+         <material name="blue">
+         </material>
+      </visual>
+      <collision>
+         <origin xyz="0 0 0" rpy="0 0 0 " />
+         <geometry>
+           <mesh filename="package://robospect_description/meshes/bases/robospect_seventh.STL" scale="1 1 1"/>
+         </geometry>
+      </collision>
+    </link>
+
+
+    <!-- TIP_JOINT -->
+
+      <joint name="base_tip_joint" type="revolute">
+        <axis xyz="0 0 1"/>
+        <limit effort="1000.0" lower="-${90 * PI / 180}" upper="${90 * PI / 180}" velocity="0.5"/>
+        <origin xyz="0.17 -0.15 0.0" rpy="-${90 * PI / 180} 0 0" />  <!-- height is the clearance -->
+        <parent link="seventh_link"/>
+        <child link="tip_link"/>
+      </joint>
+
+      <transmission name="base_tip_joint_trans">
+        <type>transmission_interface/SimpleTransmission</type>
+        <joint name="base_tip_joint">
+          <hardwareInterface>EffortJointInterface</hardwareInterface>
+        </joint>
+        <actuator name="base_tip_joint_act">
+          <!-- This hardwareInterface element exists for compatibility
+               with ROS Hydro. -->
+          <hardwareInterface>EffortJointInterface</hardwareInterface>
+          <mechanicalReduction>1</mechanicalReduction>
+        </actuator>
+      </transmission>
+
+    <!-- TIP_LINK -->
+
+    <link name="tip_link">
+      <inertial>
+        <mass value="125.0" />
+        <origin xyz="0 0 0" />
+        <inertia  ixx="1.391" ixy="0.004"  ixz="0.0"  iyy="6.853"  iyz="0.0"  izz="6.125" />
+      </inertial>
+      <visual>
+         <origin xyz="0 0 0" rpy="0 0 0" />
+         <geometry>
+            <mesh filename="package://robospect_description/meshes/bases/robospect_head.STL" scale="1 1 1"/>
+         </geometry>
+         <material name="black">
+         </material>
+      </visual>
+      <collision>
+         <origin xyz="0 0 0" rpy="0 0 0 " />
+         <geometry>
+           <mesh filename="package://robospect_description/meshes/bases/robospect_head.STL" scale="1 1 1"/>
+         </geometry>
+      </collision>
+    </link>
+
 
   </xacro:macro>
 
