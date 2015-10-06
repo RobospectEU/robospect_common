@@ -10,7 +10,7 @@
   <xacro:property name="tire_dia" value="0.56"/>
   <xacro:property name="tire_width" value="0.2"/>
 
-  <xacro:property name="hex_hub_depth" value="0.120"/> <!-- or +0.072 -->
+  <xacro:property name="hex_hub_depth" value="0.12"/> <!-- or +0.072 -->
   <xacro:property name="wheel_mass" value="15.0"/>   <!-- check -->
 
   <!-- hex_hub_dist is the distance between left and right hex hubs when
@@ -18,10 +18,11 @@
        from a U joint to the corresponding hex hub. wheel_travel is the
        vertical wheel travel. -->
   <xacro:property name="wheelbase" value="1.6"/>
+  <xacro:property name="wheelbase_rear" value="1.0"/>  
   <xacro:property name="hex_hub_dist" value="0.900"/>  <!-- 1.127 0.742 check -->
-  <xacro:property name="axle_length" value="0.120"/>
-  <xacro:property name="wheel_travel" value="0.1"/>
-  <xacro:property name="shock_z_offset" value="0.05"/>
+  <xacro:property name="axle_length" value="0.01"/>
+  <xacro:property name="wheel_travel" value="0.001"/>
+  <xacro:property name="shock_z_offset" value="0.001"/>
 
   <!-- Degree-to-radian conversions -->
   <xacro:property name="degrees_45" value="0.785398163"/>
@@ -29,15 +30,15 @@
   <xacro:property name="degrees_180" value="3.14159265"/>
 
   <!-- shock_eff_limit is 2 * ((shock_stroke / 2) * shock_spring_constant) N. -->
-  <xacro:property name="shock_eff_limit" value="100"/>
-  <xacro:property name="shock_vel_limit" value="1000"/>
+  <xacro:property name="shock_eff_limit" value="10000"/>
+  <xacro:property name="shock_vel_limit" value="1"/>
 
   <!-- axle eff limit = 2 * stall_torque
        as a function of the max gradient (15%) with overall max payload (600Kg) * wheel_radius
        (calculating this way, it should be divided by 2 if 2 motors are used)
        axle_eff_limit = 204.95 / 2 N m = ~102.5 -->
   <!-- xacro:property name="axle_eff_limit" value="102.5"/ -->
-  <xacro:property name="axle_eff_limit" value="204.95"/>
+  <xacro:property name="axle_eff_limit" value="200.0"/>
   <!-- max_speed = 33 Km/h = 9.17 m/s
        axle_vel_limit = (2 * pi) * (max_speed / (pi * tire_dia)) =  39.02 rad/s -->
   <xacro:property name="axle_vel_limit" value="39.02"/>
@@ -147,7 +148,7 @@
     </transmission>
 
     <gazebo reference="${lr_prefix}_${fr_prefix}_axle_carrier">
-      <material>Gazebo/White</material>
+      <material>Gazebo/Grey</material>
     </gazebo>
 
 
@@ -157,7 +158,8 @@
                      0
                      ${lr_reflect * (axle_length - (tire_width / 2 - hex_hub_depth))}"/>
         <geometry>
-          <cylinder radius="${tire_dia / 2}" length="${tire_width}"/>
+          <!--<cylinder radius="${tire_dia / 2}" length="${tire_width}"/> -->
+          <mesh filename="package://robospect_description/meshes/wheels/robospect_wheel_l.STL" scale="1 1 1"/>
         </geometry>
         <material name="tire_mat"/>
       </visual>
@@ -167,7 +169,8 @@
                      0
                      ${lr_reflect * (axle_length - (tire_width / 2 - hex_hub_depth))}"/>
         <geometry>
-          <cylinder radius="${tire_dia / 2}" length="${tire_width}"/>
+          <!--<cylinder radius="${tire_dia / 2}" length="${tire_width}"/> -->
+          <mesh filename="package://robospect_description/meshes/wheels/robospect_wheel_l.STL" scale="1 1 1"/>
         </geometry>
       </collision>
 
@@ -177,12 +180,10 @@
     </link>
 
     <gazebo reference="${lr_prefix}_${fr_prefix}_wheel">
-      <material>Gazebo/White</material>
+      <material>Gazebo/Grey</material>
     </gazebo>
   </xacro:macro>
 
-
-  <!-- xacro:macro name="rubber_wheel" params="name parent *origin reflect hq" -->
 
   <!-- Front wheel -->
   <xacro:macro name="front_wheel"
@@ -228,7 +229,7 @@
     </transmission>
 
     <gazebo reference="${lr_prefix}_steering_link">
-      <material>Gazebo/White</material>
+      <material>Gazebo/Grey</material>
     </gazebo>
 
     <xacro:wheel lr_prefix="${lr_prefix}" fr_prefix="${fr_prefix}"

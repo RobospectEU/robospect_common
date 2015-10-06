@@ -21,5 +21,44 @@
     <material>Gazebo/Green</material>
   </gazebo>
 
+  <gazebo reference="base_link">
+    <material>Gazebo/SkyBlue</material>
+  </gazebo>
+
+  <gazebo reference="first_link">
+    <material>Gazebo/Grey</material>
+  </gazebo>
+
+  <gazebo reference="second_link">
+    <material>Gazebo/SkyBlue</material>
+  </gazebo>
+
+  <gazebo reference="third_link">
+    <material>Gazebo/SkyBlue</material>
+  </gazebo>
+
+  <gazebo reference="fourth_link">
+    <material>Gazebo/SkyBlue</material>
+  </gazebo>
+
+  <gazebo reference="fifth_link">
+    <material>Gazebo/SkyBlue</material>
+  </gazebo>
+
+  <gazebo reference="sixth_link">
+    <material>Gazebo/SkyBlue</material>
+  </gazebo>
+
+  <gazebo reference="sixth_aux_link">
+    <material>Gazebo/SkyBlue</material>
+  </gazebo>
+
+  <gazebo reference="seventh_link">
+    <material>Gazebo/SkyBlue</material>
+  </gazebo>
+
+  <gazebo reference="tip_link">
+    <material>Gazebo/Grey</material>
+  </gazebo>
 
 </robot>

@@ -7,6 +7,7 @@ Panels:
         - /Global Options1
         - /Status1
         - /RobotModel1
+        - /TF1
       Splitter Ratio: 0.5
     Tree Height: 843
   - Class: rviz/Selection
@@ -49,7 +50,7 @@ Visualization Manager:
       Plane Cell Count: 10
       Reference Frame: <Fixed Frame>
       Value: true
-    - Alpha: 0.5
+    - Alpha: 0.6
       Class: rviz/RobotModel
       Collision Enabled: false
       Enabled: true
@@ -171,6 +172,11 @@ Visualization Manager:
           Show Axes: false
           Show Trail: false
           Value: true
+        tip_link:
+          Alpha: 1
+          Show Axes: false
+          Show Trail: false
+          Value: true
       Name: RobotModel
       Robot Description: robot_description
       TF Prefix: ""
@@ -230,9 +236,11 @@ Visualization Manager:
           Value: true
         third_link:
           Value: true
+        tip_link:
+          Value: true
       Marker Scale: 1
       Name: TF
-      Show Arrows: true
+      Show Arrows: false
       Show Axes: true
       Show Names: true
       Tree:
@@ -251,7 +259,8 @@ Visualization Manager:
                         {}
                       sixth_link:
                         seventh_link:
-                          {}
+                          tip_link:
+                            {}
             imu_link:
               {}
             left_front_axle_carrier:
@@ -301,14 +310,14 @@ Visualization Manager:
         Value: false
       Name: Current View
       Near Clip Distance: 0.01
-      Pitch: -0.064601
+      Pitch: 0.120399
       Position:
-        X: 4.78661
-        Y: 0.325073
-        Z: 1.58279
+        X: 5.98305
+        Y: 5.09284
+        Z: 2.19368
       Target Frame: <Fixed Frame>
       Value: FPS (rviz)
-      Yaw: 4.69199
+      Yaw: 4.08698
     Saved: ~
 Window Geometry:
   Displays:
