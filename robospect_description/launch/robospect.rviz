@@ -98,55 +98,21 @@ Visualization Manager:
           Show Axes: false
           Show Trail: false
           Value: true
+        front_left_wheel:
+          Alpha: 1
+          Show Axes: false
+          Show Trail: false
+          Value: true
+        front_right_wheel:
+          Alpha: 1
+          Show Axes: false
+          Show Trail: false
+          Value: true
         imu_link:
           Alpha: 1
           Show Axes: false
           Show Trail: false
           Value: true
-        left_front_axle_carrier:
-          Alpha: 1
-          Show Axes: false
-          Show Trail: false
-        left_front_wheel:
-          Alpha: 1
-          Show Axes: false
-          Show Trail: false
-          Value: true
-        left_rear_axle_carrier:
-          Alpha: 1
-          Show Axes: false
-          Show Trail: false
-        left_rear_wheel:
-          Alpha: 1
-          Show Axes: false
-          Show Trail: false
-          Value: true
-        left_steering_link:
-          Alpha: 1
-          Show Axes: false
-          Show Trail: false
-        right_front_axle_carrier:
-          Alpha: 1
-          Show Axes: false
-          Show Trail: false
-        right_front_wheel:
-          Alpha: 1
-          Show Axes: false
-          Show Trail: false
-          Value: true
-        right_rear_axle_carrier:
-          Alpha: 1
-          Show Axes: false
-          Show Trail: false
-        right_rear_wheel:
-          Alpha: 1
-          Show Axes: false
-          Show Trail: false
-          Value: true
-        right_steering_link:
-          Alpha: 1
-          Show Axes: false
-          Show Trail: false
         second_link:
           Alpha: 1
           Show Axes: false
@@ -204,27 +170,11 @@ Visualization Manager:
           Value: true
         fourth_link:
           Value: true
+        front_left_wheel:
+          Value: true
+        front_right_wheel:
+          Value: true
         imu_link:
-          Value: true
-        left_front_axle_carrier:
-          Value: true
-        left_front_wheel:
-          Value: true
-        left_rear_axle_carrier:
-          Value: true
-        left_rear_wheel:
-          Value: true
-        left_steering_link:
-          Value: true
-        right_front_axle_carrier:
-          Value: true
-        right_front_wheel:
-          Value: true
-        right_rear_axle_carrier:
-          Value: true
-        right_rear_wheel:
-          Value: true
-        right_steering_link:
           Value: true
         second_link:
           Value: true
@@ -261,22 +211,12 @@ Visualization Manager:
                         seventh_link:
                           tip_link:
                             {}
+            front_left_wheel:
+              {}
+            front_right_wheel:
+              {}
             imu_link:
               {}
-            left_front_axle_carrier:
-              left_front_wheel:
-                {}
-            left_steering_link:
-              left_rear_axle_carrier:
-                left_rear_wheel:
-                  {}
-            right_front_axle_carrier:
-              right_front_wheel:
-                {}
-            right_steering_link:
-              right_rear_axle_carrier:
-                right_rear_wheel:
-                  {}
       Update Interval: 0
       Value: true
   Enabled: true
@@ -302,22 +242,23 @@ Visualization Manager:
   Value: true
   Views:
     Current:
-      Class: rviz/FPS
+      Class: rviz/XYOrbit
+      Distance: 5.82276
       Enable Stereo Rendering:
         Stereo Eye Separation: 0.06
         Stereo Focal Distance: 1
         Swap Stereo Eyes: false
         Value: false
+      Focal Point:
+        X: 2.93375
+        Y: 1.56816
+        Z: -2.38419e-07
       Name: Current View
       Near Clip Distance: 0.01
-      Pitch: 0.120399
-      Position:
-        X: 5.98305
-        Y: 5.09284
-        Z: 2.19368
+      Pitch: 0.390399
       Target Frame: <Fixed Frame>
-      Value: FPS (rviz)
-      Yaw: 4.08698
+      Value: XYOrbit (rviz)
+      Yaw: 0.405384
     Saved: ~
 Window Geometry:
   Displays:

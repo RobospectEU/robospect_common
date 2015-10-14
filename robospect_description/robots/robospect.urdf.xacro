@@ -15,7 +15,7 @@
 	<xacro:include filename="$(find robospect_description)/urdf/bases/robospect_crane.urdf.xacro" />
 
 	<!-- Import Robospect Wheels -->
-	<xacro:include filename="$(find robospect_description)/urdf/wheels/suspension_wheel.urdf.xacro" />
+	<xacro:include filename="$(find robospect_description)/urdf/wheels/standard_wheel.urdf.xacro" />
 
 	<!-- Import all available sensors -->
 	<xacro:include filename="$(find robotnik_sensors)/urdf/all_sensors.urdf.xacro" />
@@ -27,10 +27,6 @@
 	<xacro:property name="PI" value="3.1415926535897931"/>
 
 	<!-- Wheel parameters -->
-
-	<xacro:property name="wheel_offset_x" value="1.0" />    <!-- x,y,z in translation from base_link to the center of the wheel -->
-	<xacro:property name="wheel_offset_y" value="0.75" />
-	<xacro:property name="wheel_offset_z" value="0.0" />
 
 
 	<!-- *************** -->
@@ -51,14 +47,10 @@
 	<!-- WHEELS -->
 
   <!-- Wheels -->
-  <xacro:front_wheel lr_prefix="left" fr_prefix="rear"
-                     lr_reflect="1" fr_reflect="-1"/>
-  <xacro:front_wheel lr_prefix="right" fr_prefix="rear"
-                     lr_reflect="-1" fr_reflect="-1"/>
-  <xacro:rear_wheel lr_prefix="left" fr_prefix="front"
-                    lr_reflect="1" fr_reflect="1"/>
-  <xacro:rear_wheel lr_prefix="right" fr_prefix="front"
-                    lr_reflect="-1" fr_reflect="1"/>
+  <xacro:wheels parent="base_link"/>
+  <!--xacro:front_wheel lr_prefix="right" fr_prefix="rear"/>
+  <xacro:rear_wheel lr_prefix="left" fr_prefix="front">
+  <xacro:rear_wheel lr_prefix="right" fr_prefix="front"/-->
 
 
 	<!-- SENSORS -->

@@ -302,10 +302,10 @@
 
     <!-- SIXTH_AUX_JOINT -->
 
-      <joint name="crane_sixth_aux_joint" type="revolute">
+      <!--joint name="crane_sixth_aux_joint" type="revolute">
         <axis xyz="0 1 0"/>
         <limit effort="1000.0" lower="0" upper="1.3" velocity="0.5"/>
-        <origin xyz="0.1177 0 -0.26422" rpy="0 0 0" />  <!-- height is the clearance -->
+        <origin xyz="0.1177 0 -0.26422" rpy="0 0 0" /> 
         <parent link="fifth_link"/>
         <child link="sixth_aux_link"/>
         <mimic joint="crane_sixth_joint"/>
@@ -313,18 +313,16 @@
 
       <transmission name="crane_sixth_aux_joint_trans">
         <type>transmission_interface/SimpleTransmission</type>
-        <joint name="crane_sixth_joint">
+        <joint name="crane_sixth_aux_joint">
           <hardwareInterface>EffortJointInterface</hardwareInterface>
         </joint>
         <actuator name="crane_sixth_aux_joint_act">
-          <!-- This hardwareInterface element exists for compatibility
-               with ROS Hydro. -->
           <hardwareInterface>EffortJointInterface</hardwareInterface>
           <mechanicalReduction>1</mechanicalReduction>
         </actuator>
       </transmission>
 
-    <!-- SIXTH_AUX_LINK -->
+  
 
     <link name="sixth_aux_link">
       <inertial>
@@ -346,7 +344,7 @@
            <mesh filename="package://robospect_description/meshes/bases/robospect_sixth.STL" scale="1 1 1"/>
          </geometry>
       </collision>
-    </link>
+    </link-->
 
 
 
