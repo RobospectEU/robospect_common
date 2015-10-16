@@ -1,8 +1,8 @@
 <?xml version="1.0"?>
 <robot name="wheel" xmlns:xacro="http://www.ros.org/wiki/xacro">
  
-  <xacro:property name="wheel_offset_x" value="0.750" />    <!-- x,y,z in base_footprint CS -->
-  <xacro:property name="wheel_offset_y" value="0.553" /> 
+  <xacro:property name="wheel_offset_x" value="0.800" />    <!-- x,y,z in base_footprint CS -->
+  <xacro:property name="wheel_offset_y" value="0.56" /> 
   <xacro:property name="wheel_offset_z" value="0.0" /> 
   <xacro:property name="wheel_joint_damping" value="1.0" />
   <xacro:property name="wheel_joint_friction" value="1.0" />
@@ -96,8 +96,8 @@
 	<link name="${prefix}_steering_link">
 		<inertial>
 			<origin xyz="0 0 0" />
-			<mass value="0.001"/>
-			<inertia ixx="0.001" ixy="0" ixz="0" iyy="0.001" iyz="0" izz="0.001"/>
+			<mass value="5.0"/>
+			<inertia  ixx="0.01" ixy="0.0"  ixz="0.0"  iyy="0.01"  iyz="0.0"  izz="0.01" />
 		</inertial>
     </link>
     
@@ -108,6 +108,7 @@
       <axis xyz="0 0 1"/>
       <limit lower="${-degrees_45}" upper="${degrees_45}"
              effort="${servo_stall_torque}" velocity="${servo_no_load_speed}"/>
+             
     </joint>
     
     <transmission name="${prefix}_steering_trans">
