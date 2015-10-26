@@ -134,6 +134,41 @@
         
   </xacro:macro>
   
+  <xacro:macro name="steering_center_wheel" params="parent prefix y_reflect x_reflect roll_reflect yaw_reflect x_pos y_pos z_pos">
+	
+	<link name="${prefix}_steering_link">
+		<inertial>
+			<origin xyz="0 0 0" />
+			<mass value="5.0"/>
+			<inertia  ixx="0.01" ixy="0.0"  ixz="0.0"  iyy="0.01"  iyz="0.0"  izz="0.01" />
+		</inertial>
+    </link>
+    
+    <joint name="${prefix}_steering_joint" type="revolute">
+	  <origin xyz="${x_reflect * x_pos} ${y_reflect * y_pos} ${z_pos}"/>
+      <parent link="${parent}"/>
+      <child link="${prefix}_steering_link"/>
+      <axis xyz="0 0 1"/>
+      <limit lower="${-degrees_45}" upper="${degrees_45}"
+             effort="${servo_stall_torque}" velocity="${servo_no_load_speed}"/>
+             
+    </joint>
+    
+    <transmission name="${prefix}_steering_trans">
+      <type>transmission_interface/SimpleTransmission</type>
+      <joint name="${prefix}_steering_joint">
+        <hardwareInterface>EffortJointInterface</hardwareInterface>
+      </joint>
+      <actuator name="${prefix}_steering_act">
+        <hardwareInterface>EffortJointInterface</hardwareInterface>
+        <mechanicalReduction>1</mechanicalReduction>
+      </actuator>
+    </transmission>
+
+   
+        
+  </xacro:macro>
+  
   <xacro:macro name="wheels"
                params="parent">
     
@@ -142,6 +177,8 @@
     
     <xacro:steering_wheel prefix="left_rear" parent="${parent}" x_reflect="-1" y_reflect="1" yaw_reflect="1" roll_reflect="1" x_pos="${steering_offset_x}" y_pos="${steering_offset_y}" z_pos="0.0"/>
     <xacro:steering_wheel prefix="right_rear" parent="${parent}" x_reflect="-1" y_reflect="-1" yaw_reflect="-1" roll_reflect="-1" x_pos="${steering_offset_x}" y_pos="${steering_offset_y}" z_pos="0.0"/>
+    
+    <xacro:steering_center_wheel prefix="center_rear" parent="${parent}" x_reflect="-1" y_reflect="-1" yaw_reflect="-1" roll_reflect="-1" x_pos="${steering_offset_x}" y_pos="0.0" z_pos="0.0"/>
     
     
   </xacro:macro>
