@@ -1,9 +1,14 @@
 <?xml version="1.0"?>
 <robot name="wheel" xmlns:xacro="http://www.ros.org/wiki/xacro">
  
-  <xacro:property name="wheel_offset_x" value="0.800" />    <!-- x,y,z in base_footprint CS -->
-  <xacro:property name="wheel_offset_y" value="0.56" /> 
+  <xacro:property name="wheel_offset_x" value="0.7725" />    <!-- x,y,z in base_footprint CS -->
+  <xacro:property name="wheel_offset_y" value="0.5025" /> 
   <xacro:property name="wheel_offset_z" value="0.0" /> 
+  <xacro:property name="steering_offset_x" value="0.7725" />    <!-- x,y,z in base_footprint CS -->
+  <xacro:property name="steering_offset_y" value="0.365" /> 
+  <xacro:property name="steering_offset_z" value="0.0" /> 
+  <xacro:property name="wheel_to_steering" value="0.11" /> 
+  <xacro:property name="wheel_width" value="0.175" /> 
   <xacro:property name="wheel_joint_damping" value="1.0" />
   <xacro:property name="wheel_joint_friction" value="1.0" />
   
@@ -35,16 +40,16 @@
 
 
   <!-- The "wheel" macro defines an axle carrier, axle, and wheel. -->
-  <xacro:macro name="traction_wheel" params="parent prefix y_reflect x_reflect roll_reflect yaw_reflect">
+  <xacro:macro name="traction_wheel" params="parent prefix y_reflect x_reflect roll_reflect yaw_reflect x_pos y_pos z_pos x_link_offset y_link_offset z_link_offset">
 	
 	<link name="${prefix}_wheel_link">
 	<inertial>
       <mass value="10" />
-      <origin xyz="0 0 0" />
+      <origin xyz="${x_link_offset} ${y_link_offset} ${z_link_offset}" />
       <inertia  ixx="0.01" ixy="0.0"  ixz="0.0"  iyy="0.01"  iyz="0.0"  izz="0.01" />
     </inertial>    
       <visual>
-        <origin xyz="0 0 0"/>
+        <origin xyz="${x_link_offset} ${y_link_offset} ${z_link_offset}"/>
         <geometry>
           <mesh filename="package://robospect_description/meshes/wheels/robospect_wheel_l.STL" scale="1 1 1"/>
           <!--mesh filename="package://robospect_description/meshes/wheels/rbcar_wheel1.stl" scale="1 1 1"/-->
@@ -53,7 +58,7 @@
       </visual>
 
       <collision>
-        <origin xyz="0 0 0"/>
+        <origin xyz="${x_link_offset} ${y_link_offset} ${z_link_offset}"/>
         <geometry>
           <mesh filename="package://robospect_description/meshes/wheels/robospect_wheel_l.STL" scale="1 1 1"/>
         </geometry>
@@ -63,7 +68,7 @@
     <joint name="${prefix}_axle_joint" type="continuous">
       <parent link="${parent}"/>
       <child link="${prefix}_wheel_link"/>
-      <origin xyz="${x_reflect * wheel_offset_x} ${y_reflect * wheel_offset_y} ${wheel_offset_z}" rpy="${-roll_reflect * degrees_90} 0 ${yaw_reflect * degrees_180}"/>
+      <origin xyz="${x_reflect * x_pos} ${y_reflect * y_pos} ${z_pos}" rpy="${-roll_reflect * degrees_90} 0 ${yaw_reflect * degrees_180}"/>
       <axis xyz="0 0 ${yaw_reflect}"/>
       <limit effort="${axle_eff_limit}" velocity="${axle_vel_limit}"/>
       <joint_properties damping="${wheel_joint_damping}" friction="{wheel_joint_friction}"/>
@@ -91,7 +96,7 @@
     
   </xacro:macro>
   
-  <xacro:macro name="steering_wheel" params="parent prefix y_reflect x_reflect roll_reflect yaw_reflect">
+  <xacro:macro name="steering_wheel" params="parent prefix y_reflect x_reflect roll_reflect yaw_reflect x_pos y_pos z_pos">
 	
 	<link name="${prefix}_steering_link">
 		<inertial>
@@ -102,7 +107,7 @@
     </link>
     
     <joint name="${prefix}_steering_joint" type="revolute">
-	  <origin xyz="${x_reflect * wheel_offset_x} ${y_reflect * wheel_offset_y} 0"/>
+	  <origin xyz="${x_reflect * x_pos} ${y_reflect * y_pos} ${z_pos}"/>
       <parent link="${parent}"/>
       <child link="${prefix}_steering_link"/>
       <axis xyz="0 0 1"/>
@@ -125,18 +130,18 @@
     <gazebo reference="${prefix}_steering_link">
     </gazebo>
    
-    <xacro:traction_wheel prefix="${prefix}" parent="${prefix}_steering_link" x_reflect="0" y_reflect="0" yaw_reflect="${yaw_reflect}" roll_reflect="${roll_reflect}"/>
+    <xacro:traction_wheel prefix="${prefix}" parent="${prefix}_steering_link" x_reflect="0" y_reflect="${y_reflect}" yaw_reflect="${yaw_reflect}" roll_reflect="${roll_reflect}" x_pos="0.0" y_pos="${wheel_to_steering}" z_pos="0.0" x_link_offset="0.0" y_link_offset="0.0" z_link_offset="${-wheel_width/2.0}"/>
         
   </xacro:macro>
   
   <xacro:macro name="wheels"
                params="parent">
     
-    <xacro:traction_wheel prefix="left_front" parent="${parent}" x_reflect="1" y_reflect="1" yaw_reflect="1" roll_reflect="1"/>
-    <xacro:traction_wheel prefix="right_front" parent="${parent}" x_reflect="1" y_reflect="-1" yaw_reflect="-1" roll_reflect="-1"/>
+    <xacro:traction_wheel prefix="left_front" parent="${parent}" x_reflect="1" y_reflect="1" yaw_reflect="1" roll_reflect="1" x_pos="${wheel_offset_x}" y_pos="${wheel_offset_y}" z_pos="0.0" x_link_offset="0.0" y_link_offset="0.0" z_link_offset="${-wheel_width/2.0}"/>
+    <xacro:traction_wheel prefix="right_front" parent="${parent}" x_reflect="1" y_reflect="-1" yaw_reflect="-1" roll_reflect="-1" x_pos="${wheel_offset_x}" y_pos="${wheel_offset_y}" z_pos="0.0" x_link_offset="0.0" y_link_offset="0.0" z_link_offset="${-wheel_width/2.0}"/>
     
-    <xacro:steering_wheel prefix="left_rear" parent="${parent}" x_reflect="-1" y_reflect="1" yaw_reflect="1" roll_reflect="1"/>
-    <xacro:steering_wheel prefix="right_rear" parent="${parent}" x_reflect="-1" y_reflect="-1" yaw_reflect="-1" roll_reflect="-1"/>
+    <xacro:steering_wheel prefix="left_rear" parent="${parent}" x_reflect="-1" y_reflect="1" yaw_reflect="1" roll_reflect="1" x_pos="${steering_offset_x}" y_pos="${steering_offset_y}" z_pos="0.0"/>
+    <xacro:steering_wheel prefix="right_rear" parent="${parent}" x_reflect="-1" y_reflect="-1" yaw_reflect="-1" roll_reflect="-1" x_pos="${steering_offset_x}" y_pos="${steering_offset_y}" z_pos="0.0"/>
     
     
   </xacro:macro>

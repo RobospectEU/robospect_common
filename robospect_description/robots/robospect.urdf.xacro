@@ -59,8 +59,11 @@
 		<origin xyz="0.0 0.0 0.170" rpy="0 0 0"/>
 	</xacro:sensor_imu>
 
-	<xacro:sensor_hokuyo_utm30lx name="hokuyo" parent="base_link">
-		<origin xyz="1 0.0 0.25" rpy="0 0 0"/>
+	<xacro:sensor_hokuyo_utm30lx name="sick_front" parent="base_link">
+		<origin xyz="1.058 0.0 0.0" rpy="0 0 0"/>
+	</xacro:sensor_hokuyo_utm30lx>
+	<xacro:sensor_hokuyo_utm30lx name="sick_rear" parent="base_link">
+		<origin xyz="-1.058 0.0 0.0" rpy="0 0 ${PI}"/>
 	</xacro:sensor_hokuyo_utm30lx>
 
 <!--
@@ -70,9 +73,23 @@
 -->
 
 	<xacro:sensor_axis name="camera" parent="base_link">
-		<origin xyz="0.9 0 0.37" rpy="0 ${PI/180} 0"/>
+		<origin xyz="0.5 0 0.6" rpy="0 ${PI/180} 0"/>
 	</xacro:sensor_axis>
-
+	
+	<!-- NAV200 -->
+    <joint name="nav200_laser_joint" type="fixed">
+	  <origin xyz="0.9225 0.009 0.408" rpy="0 0 ${-PI/2}"/>
+      <parent link="base_link"/>
+      <child link="nav200_laser_link"/>
+	 </joint>
+  
+	 <link name="nav200_laser_link">
+		<inertial>
+			<mass value="1e-5" />
+			<origin xyz="0 0 0" rpy="0 0 0"/>
+			<inertia ixx="1e-6" ixy="0" ixz="0" iyy="1e-6" iyz="0" izz="1e-6" />
+		</inertial>
+	 </link>
 
 <!--
 	<xacro:sensor_asus_xtion_pro name="xtion_pro" parent="base_link">
