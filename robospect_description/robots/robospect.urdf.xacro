@@ -91,6 +91,11 @@
 		</inertial>
 	 </link>
 
+	<xacro:sensor_imu name="imu_crane" parent="tip_link">
+		<origin xyz="0.7 0.0 0.32" rpy="0 0 0"/>
+	</xacro:sensor_imu>
+
+	
 <!--
 	<xacro:sensor_asus_xtion_pro name="xtion_pro" parent="base_link">
 		<origin xyz="0.3 0.0 0.3" rpy="0 0 0"/>
