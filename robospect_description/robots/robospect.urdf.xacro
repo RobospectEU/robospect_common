@@ -59,12 +59,18 @@
 		<origin xyz="0.0 0.0 0.170" rpy="0 0 0"/>
 	</xacro:sensor_imu>
 
-	<xacro:sensor_hokuyo_utm30lx name="sick_front" parent="base_link">
+	<!--xacro:sensor_hokuyo_utm30lx name="sick_front" parent="base_link">
 		<origin xyz="1.058 0.0 0.0" rpy="0 0 0"/>
 	</xacro:sensor_hokuyo_utm30lx>
 	<xacro:sensor_hokuyo_utm30lx name="sick_rear" parent="base_link">
 		<origin xyz="-1.058 0.0 0.0" rpy="0 0 ${PI}"/>
-	</xacro:sensor_hokuyo_utm30lx>
+	</xacro:sensor_hokuyo_utm30lx!-->
+	<xacro:sensor_sick_s3000 name="sick_front" parent="base_link">
+		<origin xyz="1.058 0.0 0.0" rpy="0 0 0"/>
+	</xacro:sensor_sick_s3000>
+	<xacro:sensor_sick_s3000 name="sick_rear" parent="base_link">
+		<origin xyz="-1.058 0.0 0.0" rpy="0 0 ${PI}"/>
+	</xacro:sensor_sick_s3000>
 
 <!--
 	<xacro:sensor_hokuyo_urg04lx name="hokuyo1" parent="base_link">
