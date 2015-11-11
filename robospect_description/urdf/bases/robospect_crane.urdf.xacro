@@ -15,8 +15,10 @@
   <xacro:property name="joint_6_upper_limit" value="2.064"/>
   <xacro:property name="joint_5_lower_limit" value="0.0"/>
   <xacro:property name="joint_5_upper_limit" value="1.155"/>
+  
   <xacro:property name="joint_5_pitch" value="1.05"/>
-  <xacro:property name="joint_6_pitch" value="-${joint_6_upper_limit/2.0}"/>
+  <!--xacro:property name="joint_6_pitch" value="-${joint_6_upper_limit/2.0}"/-->
+  <xacro:property name="joint_6_pitch" value="-1.032"/>
   
   <xacro:macro name="robospect_crane">
 	  
