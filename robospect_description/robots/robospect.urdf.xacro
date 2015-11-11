@@ -100,6 +100,21 @@
 	<xacro:sensor_imu name="imu_crane" parent="tip_link">
 		<origin xyz="0.7 0.0 0.32" rpy="0 0 0"/>
 	</xacro:sensor_imu>
+	
+	<!-- ARM UC3M -->
+    <joint name="arm_joint" type="fixed">
+	  <origin xyz="0.731 0.0 0.308" rpy="0 0 ${-PI/2}"/>
+      <parent link="tip_link"/>
+      <child link="arm_link"/>
+	 </joint>
+  
+	 <link name="arm_link">
+		<inertial>
+			<mass value="1e-5" />
+			<origin xyz="0 0 0" rpy="0 0 0"/>
+			<inertia ixx="1e-6" ixy="0" ixz="0" iyy="1e-6" iyz="0" izz="1e-6" />
+		</inertial>
+	 </link>
 
 	
 <!--
