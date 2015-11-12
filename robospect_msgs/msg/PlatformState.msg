@@ -1,0 +1,30 @@
+#State of the vehicle+crane system
+
+#Vehicle position+orientation
+float32 vehicle_x
+float32 vehicle_y
+float32 vehicle_theta
+
+#Crane position+orientation
+float32 crane_x
+float32 crane_y
+float32 crane_z
+float32 crane_q1
+float32 crane_q2
+float32 crane_q3
+float32 crane_q4
+
+#Crane joints
+float32[] crane_joints
+
+#Vehicle battery level
+float32 battery_level
+
+#Vehicle State
+int32 ROBOT_STOPPED = 0
+int32 WAITING_FOR_COMMAND = 1
+int32 VEHICLE_MOVING = 2
+int32 CRANE_MOVING = 3
+int32 FOLDING_CRANE = 4
+
+int32 state
