@@ -78,8 +78,8 @@
 	</xacro:sensor_hokuyo_urg04lx>
 -->
 
-	<xacro:sensor_axis name="camera" parent="base_link">
-		<origin xyz="0.5 0 0.6" rpy="0 ${PI/180} 0"/>
+	<xacro:sensor_axis name="camera" parent="first_link">
+		<origin xyz="0.573 0 0.313" rpy="0 ${PI/180} 0"/>
 	</xacro:sensor_axis>
 	
 	<!-- NAV200 -->
