@@ -51,7 +51,7 @@
       <visual>
         <origin xyz="${x_link_offset} ${y_link_offset} ${z_link_offset}"/>
         <geometry>
-          <mesh filename="package://robospect_description/meshes/wheels/robospect_wheel_l.STL" scale="1 1 1"/>
+          <mesh filename="package://robospect_description/meshes/wheels/robospect_wheel_l.dae" scale="1 1 1"/>
           <!--mesh filename="package://robospect_description/meshes/wheels/rbcar_wheel1.stl" scale="1 1 1"/-->
         </geometry>
         <material name="tire_mat"/>
@@ -60,7 +60,7 @@
       <collision>
         <origin xyz="${x_link_offset} ${y_link_offset} ${z_link_offset}"/>
         <geometry>
-          <mesh filename="package://robospect_description/meshes/wheels/robospect_wheel_l.STL" scale="1 1 1"/>
+          <mesh filename="package://robospect_description/meshes/wheels/robospect_wheel_l.dae" scale="1 1 1"/>
         </geometry>
       </collision>
     </link>

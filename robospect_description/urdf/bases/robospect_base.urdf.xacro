@@ -45,7 +45,7 @@
     <visual>
        <origin xyz="0 0 0" rpy="0 0 0" />
        <geometry>
-	       <mesh filename="package://robospect_description/meshes/bases/robospect_base_chassis.STL"/>
+	       <mesh filename="package://robospect_description/meshes/bases/robospect_base_chassis.dae"/>
        </geometry>
        <material name="blue">
          <color rgba="0.0 0.4 0.9 1.0"/>
@@ -54,7 +54,7 @@
     <collision>
        <origin xyz="0 0 0" rpy="0 0 0" />
        <geometry>
-         <mesh filename="package://robospect_description/meshes/bases/robospect_base_chassis.STL"/>
+         <mesh filename="package://robospect_description/meshes/bases/robospect_base_chassis.dae"/>
        </geometry>
     </collision>
   </link>

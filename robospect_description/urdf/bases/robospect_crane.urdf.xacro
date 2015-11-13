@@ -56,7 +56,7 @@
     <visual>
        <origin xyz="0 0 0" rpy="0 0 0" />
        <geometry>
-	        <mesh filename="package://robospect_description/meshes/bases/robospect_first.STL" scale="1 1 1"/>
+	        <mesh filename="package://robospect_description/meshes/bases/robospect_first.dae" scale="1 1 1"/>
        </geometry>
        <material name="grey">
           <color rgba="0.8 0.8 0.8 1"/>
@@ -65,7 +65,7 @@
     <collision>
        <origin xyz="0 0 0" rpy="0 0 0 " />
        <geometry>
-         <mesh filename="package://robospect_description/meshes/bases/robospect_first.STL" scale="1 1 1"/>
+         <mesh filename="package://robospect_description/meshes/bases/robospect_first.dae" scale="1 1 1"/>
        </geometry>
     </collision>
   </link>
@@ -111,7 +111,7 @@
     <visual>
        <origin xyz="0 0 0" rpy="0 0 0" />
        <geometry>
-	        <mesh filename="package://robospect_description/meshes/bases/robospect_second.STL" scale="1 1 1"/>
+	        <mesh filename="package://robospect_description/meshes/bases/robospect_second.dae" scale="1 1 1"/>
        </geometry>
        <material name="blue">
        </material>
@@ -119,7 +119,7 @@
     <collision>
        <origin xyz="0 0 0" rpy="0 0 0 " />
        <geometry>
-         <mesh filename="package://robospect_description/meshes/bases/robospect_second.STL" scale="1 1 1"/>
+         <mesh filename="package://robospect_description/meshes/bases/robospect_second.dae" scale="1 1 1"/>
        </geometry>
     </collision>
   </link>
@@ -157,7 +157,7 @@
       <visual>
          <origin xyz="0 0 0" rpy="0 0 0" />
          <geometry>
-  	        <mesh filename="package://robospect_description/meshes/bases/robospect_third.STL" scale="1 1 1"/>
+  	        <mesh filename="package://robospect_description/meshes/bases/robospect_third.dae" scale="1 1 1"/>
          </geometry>
          <material name="blue">
          </material>
@@ -165,7 +165,7 @@
       <collision>
          <origin xyz="0 0 0" rpy="0 0 0 " />
          <geometry>
-           <mesh filename="package://robospect_description/meshes/bases/robospect_third.STL" scale="1 1 1"/>
+           <mesh filename="package://robospect_description/meshes/bases/robospect_third.dae" scale="1 1 1"/>
          </geometry>
       </collision>
     </link>
@@ -204,7 +204,7 @@
       <visual>
          <origin xyz="0 0 0" rpy="0 0 0" />
          <geometry>
-            <mesh filename="package://robospect_description/meshes/bases/robospect_fourth.STL" scale="1 1 1"/>
+            <mesh filename="package://robospect_description/meshes/bases/robospect_fourth.dae" scale="1 1 1"/>
          </geometry>
          <material name="blue">
          </material>
@@ -212,7 +212,7 @@
       <collision>
          <origin xyz="0 0 0" rpy="0 0 0 " />
          <geometry>
-           <mesh filename="package://robospect_description/meshes/bases/robospect_fourth.STL" scale="1 1 1"/>
+           <mesh filename="package://robospect_description/meshes/bases/robospect_fourth.dae" scale="1 1 1"/>
          </geometry>
       </collision>
     </link>
@@ -251,7 +251,7 @@
       <visual>
          <origin xyz="0 0 0" rpy="0 0 0" />
          <geometry>
-            <mesh filename="package://robospect_description/meshes/bases/robospect_fifth.STL" scale="1 1 1"/>
+            <mesh filename="package://robospect_description/meshes/bases/robospect_fifth.dae" scale="1 1 1"/>
          </geometry>
          <material name="blue">
          </material>
@@ -259,7 +259,7 @@
       <collision>
          <origin xyz="0 0 0" rpy="0 0 0 " />
          <geometry>
-           <mesh filename="package://robospect_description/meshes/bases/robospect_fifth.STL" scale="1 1 1"/>
+           <mesh filename="package://robospect_description/meshes/bases/robospect_fifth.dae" scale="1 1 1"/>
          </geometry>
       </collision>
     </link>
@@ -326,7 +326,7 @@
       <visual>
          <origin xyz="0 0 0" rpy="0 0 0" />
          <geometry>
-            <mesh filename="package://robospect_description/meshes/bases/robospect_sixth.STL" scale="1 1 1"/>
+            <mesh filename="package://robospect_description/meshes/bases/robospect_sixth.dae" scale="1 1 1"/>
          </geometry>
          <material name="blue">
          </material>
@@ -334,7 +334,7 @@
       <collision>
          <origin xyz="0 0 0" rpy="0 0 0 " />
          <geometry>
-           <mesh filename="package://robospect_description/meshes/bases/robospect_sixth.STL" scale="1 1 1"/>
+           <mesh filename="package://robospect_description/meshes/bases/robospect_sixth.dae" scale="1 1 1"/>
          </geometry>
       </collision>
     </link>
@@ -369,7 +369,7 @@
       <visual>
          <origin xyz="0 0 0" rpy="0 0 0" />
          <geometry>
-            <mesh filename="package://robospect_description/meshes/bases/robospect_sixth.STL" scale="1 1 1"/>
+            <mesh filename="package://robospect_description/meshes/bases/robospect_sixth.dae" scale="1 1 1"/>
          </geometry>
          <material name="blue">
          </material>
@@ -377,7 +377,7 @@
       <collision>
          <origin xyz="0 0 0" rpy="0 0 0 " />
          <geometry>
-           <mesh filename="package://robospect_description/meshes/bases/robospect_sixth.STL" scale="1 1 1"/>
+           <mesh filename="package://robospect_description/meshes/bases/robospect_sixth.dae" scale="1 1 1"/>
          </geometry>
       </collision>
     </link>
@@ -412,7 +412,7 @@
       <visual>
          <origin xyz="0 0 0" rpy="0 0 0" />
          <geometry>
-            <mesh filename="package://robospect_description/meshes/bases/robospect_sixth.STL" scale="1 1 1"/>
+            <mesh filename="package://robospect_description/meshes/bases/robospect_sixth.dae" scale="1 1 1"/>
          </geometry>
          <material name="blue">
          </material>
@@ -420,7 +420,7 @@
       <collision>
          <origin xyz="0 0 0" rpy="0 0 0 " />
          <geometry>
-           <mesh filename="package://robospect_description/meshes/bases/robospect_sixth.STL" scale="1 1 1"/>
+           <mesh filename="package://robospect_description/meshes/bases/robospect_sixth.dae" scale="1 1 1"/>
          </geometry>
       </collision>
     </link>
@@ -455,7 +455,7 @@
       <visual>
          <origin xyz="0 0 0" rpy="0 0 0" />
          <geometry>
-            <mesh filename="package://robospect_description/meshes/bases/robospect_sixth.STL" scale="1 1 1"/>
+            <mesh filename="package://robospect_description/meshes/bases/robospect_sixth.dae" scale="1 1 1"/>
          </geometry>
          <material name="blue">
          </material>
@@ -463,7 +463,7 @@
       <collision>
          <origin xyz="0 0 0" rpy="0 0 0 " />
          <geometry>
-           <mesh filename="package://robospect_description/meshes/bases/robospect_sixth.STL" scale="1 1 1"/>
+           <mesh filename="package://robospect_description/meshes/bases/robospect_sixth.dae" scale="1 1 1"/>
          </geometry>
       </collision>
     </link>
@@ -506,7 +506,7 @@
       <visual>
          <origin xyz="0 0 0" rpy="0 0 0" />
          <geometry>
-            <mesh filename="package://robospect_description/meshes/bases/robospect_seventh.STL" scale="1 1 1"/>
+            <mesh filename="package://robospect_description/meshes/bases/robospect_seventh.dae" scale="1 1 1"/>
          </geometry>
          <material name="blue">
          </material>
@@ -514,7 +514,7 @@
       <collision>
          <origin xyz="0 0 0" rpy="0 0 0 " />
          <geometry>
-           <mesh filename="package://robospect_description/meshes/bases/robospect_seventh.STL" scale="1 1 1"/>
+           <mesh filename="package://robospect_description/meshes/bases/robospect_seventh.dae" scale="1 1 1"/>
          </geometry>
       </collision>
     </link>
@@ -551,7 +551,7 @@
       <visual>
          <origin xyz="0 0 0" rpy="0 0 0" />
          <geometry>
-            <mesh filename="package://robospect_description/meshes/bases/robospect_head.STL" scale="1 1 1"/>
+            <mesh filename="package://robospect_description/meshes/bases/robospect_head.dae" scale="1 1 1"/>
          </geometry>
          <material name="black">
          </material>
@@ -559,7 +559,7 @@
       <collision>
          <origin xyz="0 0 0" rpy="0 0 0 " />
          <geometry>
-           <mesh filename="package://robospect_description/meshes/bases/robospect_head.STL" scale="1 1 1"/>
+           <mesh filename="package://robospect_description/meshes/bases/robospect_head.dae" scale="1 1 1"/>
          </geometry>
       </collision>
     </link>
