@@ -25,6 +25,10 @@ add_message_files(DIRECTORY msg
 	FILES
 	State.msg
 	ControlState.msg
+	MissionCommand.msg
+	MissionState.msg
+	PlatformCommand.msg
+	PlatformState.msg
 )
 
 ## Generate services in the 'srv' folder
