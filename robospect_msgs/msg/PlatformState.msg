@@ -21,10 +21,10 @@ float32[] crane_joints
 float32 battery_level
 
 #Vehicle State
-int32 ROBOT_STOPPED = 0
-int32 WAITING_FOR_COMMAND = 1
-int32 VEHICLE_MOVING = 2
-int32 CRANE_MOVING = 3
-int32 FOLDING_CRANE = 4
-
-int32 state
+#int32 ROBOT_STOPPED = 0
+#int32 WAITING_FOR_COMMAND = 1
+#int32 VEHICLE_MOVING = 2
+#int32 CRANE_MOVING = 3
+#int32 FOLDING_CRANE = 4
+#int32 state
+string state
