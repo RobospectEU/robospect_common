@@ -4,6 +4,9 @@
 float32 vehicle_x
 float32 vehicle_y
 float32 vehicle_theta
+# Vehicle velocities
+float32 vehicle_linear_speed
+float32 vehicle_angular_speed
 
 #Crane position+orientation
 float32 crane_x
@@ -28,3 +31,6 @@ float32 battery_level
 #int32 FOLDING_CRANE = 4
 #int32 state
 string state
+
+# Command being executed
+string command
