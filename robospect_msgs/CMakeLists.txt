@@ -38,6 +38,8 @@ add_service_files(
 	DetectCrack.srv
 	GetStereo.srv
 	ScanProfile.srv
+	PlatformCommandSrv.srv	
+	MissionCommandSrv.srv	
 )
 
 #add_action_files(DIRECTORY action 
