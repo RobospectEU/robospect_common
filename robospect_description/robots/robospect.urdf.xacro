@@ -48,13 +48,8 @@
 
   <!-- Wheels -->
   <xacro:wheels parent="base_link"/>
-  <!--xacro:front_wheel lr_prefix="right" fr_prefix="rear"/>
-  <xacro:rear_wheel lr_prefix="left" fr_prefix="front">
-  <xacro:rear_wheel lr_prefix="right" fr_prefix="front"/-->
-
 
 	<!-- SENSORS -->
-
 	<xacro:sensor_imu name="imu" parent="base_link">
 		<origin xyz="0.0 0.0 0.170" rpy="0 0 0"/>
 	</xacro:sensor_imu>
@@ -65,20 +60,13 @@
 	<xacro:sensor_sick_s3000 name="sick_rear" parent="base_link">
 		<origin xyz="-1.058 0.0 0.0" rpy="0 0 ${PI}"/>
 	</xacro:sensor_sick_s3000>
-
-<!--
-	<xacro:sensor_hokuyo_urg04lx name="hokuyo1" parent="base_link">
-		<origin xyz="-0.1 0.0 0.33" rpy="0 0 0"/>
-	</xacro:sensor_hokuyo_urg04lx>
--->
-
+	
 	<xacro:sensor_axis name="camera" parent="first_link">
 		<origin xyz="0.573 0 0.313" rpy="0 ${PI/180} 0"/>
 	</xacro:sensor_axis>
 	
 	<!-- NAV200 -->
     <joint name="nav200_laser_joint" type="fixed">
-	  <!--origin xyz="0.9225 0.009 0.408" rpy="0 0 ${-PI/2}"/-->
 	  <origin xyz="0.880 0.0 0.408" rpy="0 0 0"/>
       <parent link="base_link"/>
       <child link="nav200_laser_link"/>

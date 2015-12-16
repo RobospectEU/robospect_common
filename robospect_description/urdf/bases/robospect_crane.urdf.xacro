@@ -77,7 +77,7 @@
 
 
 
-  <!-- SECOND_JOINT -->
+	<!-- SECOND_JOINT -->
 
     <joint name="crane_second_joint" type="prismatic">
       <axis xyz="0 0 1"/>
