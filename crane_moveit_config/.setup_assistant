@@ -1,0 +1,8 @@
+moveit_setup_assistant_config:
+  URDF:
+    package: robospect_description
+    relative_path: robots/crane.urdf.xacro
+  SRDF:
+    relative_path: config/robospect.srdf
+  CONFIG:
+    generated_timestamp: 1450716307
