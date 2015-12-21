@@ -1,0 +1,46 @@
+<?xml version="1.0"?>
+<robot name="robospect" xmlns:xacro="http://www.ros.org/wiki/xacro">
+
+
+	<!-- ***************** -->
+	<!-- Imported elements -->
+	<!-- ***************** -->
+
+	<!-- First we import all posible elements defined in the urdf.xacro files. All these elements are defined as macro:xacros -->
+
+	<!-- Import Robospect Crane -->
+	<xacro:include filename="$(find robospect_description)/urdf/bases/robospect_crane.urdf.xacro" />
+	<link name="base_footprint">
+	  <visual>
+		  <origin xyz="0 0 0" rpy="0 0 0" />
+		  <geometry>
+			 <box size="0.001 0.001 0.001" />
+		  </geometry>
+	  </visual>
+	</link>
+
+	<joint name="base_footprint_joint" type="fixed">
+	  <origin xyz="0 0 0.0" rpy="0 0 0" /> 
+	  <parent link="base_footprint"/>
+	  <child link="base_link" />
+	</joint>
+
+	<!-- BASE_LINK -->
+	<link name="base_link">
+	</link>
+  
+	<xacro:robospect_crane parent="base_link">
+		<origin xyz="0 0 0" rpy="0 0 0" />
+	</xacro:robospect_crane>
+	<!-- Gazebo ros control pluggins -->
+	<xacro:ros_control/>
+
+
+	<!-- WHEELS -->
+
+ 
+
+
+
+
+</robot>
