@@ -38,6 +38,7 @@ add_service_files(
 	DetectCrack.srv
 	GetStereo.srv
 	ScanProfile.srv
+	SetControlMode.srv
 )
 
 #add_action_files(DIRECTORY action 
