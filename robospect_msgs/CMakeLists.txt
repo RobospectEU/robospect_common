@@ -39,6 +39,8 @@ add_service_files(
 	GetStereo.srv
 	ScanProfile.srv
 	SetControlMode.srv
+	PlatformCommandSrv.srv	
+	MissionCommandSrv.srv	
 )
 
 #add_action_files(DIRECTORY action 
