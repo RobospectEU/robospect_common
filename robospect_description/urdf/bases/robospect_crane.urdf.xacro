@@ -12,8 +12,10 @@
   <xacro:property name="joint_3_upper_limit" value="0.5161"/>
   <xacro:property name="joint_4_lower_limit" value="0.0"/>
   <xacro:property name="joint_4_upper_limit" value="1.523"/>
-  <xacro:property name="joint_6_lower_limit" value="0.0"/>
-  <xacro:property name="joint_6_upper_limit" value="2.064"/>
+  <!--xacro:property name="joint_6_lower_limit" value="0.0"/>
+  <xacro:property name="joint_6_upper_limit" value="2.064"/-->
+  <xacro:property name="joint_6_lower_limit" value="-1.032"/>
+  <xacro:property name="joint_6_upper_limit" value="1.032"/>
   <xacro:property name="joint_5_lower_limit" value="0.0"/>
   <xacro:property name="joint_5_upper_limit" value="1.155"/>
   <!--xacro:property name="joint_5_lower_limit" value="-0.4569"/>
@@ -240,8 +242,8 @@
         <axis xyz="0 0 -1"/>
         <!--limit effort="1000.0" lower="${joint_5_lower_limit}" upper="${joint_5_upper_limit}" velocity="0.5"/-->
         <limit effort="1000.0" lower="-${PI/2}" upper="${PI/2}" velocity="0.5"/>
-        <!--origin xyz="-0.132 0.0 2.084" rpy="-${PI/2.0} ${joint_5_yaw} 0" /-->  
-        <origin xyz="-0.132 0.0 2.084" rpy="-${PI/2.0} ${joint_5_yaw - joint_5_upper_limit} 0" />  
+        <origin xyz="-0.132 0.0 2.084" rpy="-${PI/2.0} 0.0 0" />  
+        <!--origin xyz="-0.132 0.0 2.084" rpy="-${PI/2.0} ${joint_5_yaw - joint_5_upper_limit} 0" /-->  
         <parent link="fourth_link"/>
         <child link="fifth_link"/>
         <mimic joint="crane_third_joint" multiplier="-1.0" offset="0.0"/> 
@@ -268,7 +270,7 @@
         <inertia  ixx="1.391" ixy="0.004"  ixz="0.0"  iyy="6.853"  iyz="0.0"  izz="6.125" />
       </inertial>
       <visual>
-         <origin xyz="0 0 0" rpy="${PI/2.0} 0 0" />
+         <origin xyz="0 0 0" rpy="${PI/2.0} 0 -0.4569" />
          <geometry>
             <mesh filename="package://robospect_description/meshes/bases/robospect_fifth.dae" scale="1 1 1"/>
          </geometry>
@@ -276,8 +278,8 @@
          </material>
       </visual>
       <collision>
-         <!--origin xyz="0 0 0" rpy="${PI/2.0} 0 ${joint_5_yaw}" /-->
-         <origin xyz="0 0 0" rpy="${PI/2.0} 0 0" />
+         <origin xyz="0 0 0" rpy="${PI/2.0} 0 -0.4569" />
+         <!--origin xyz="0 0 0" rpy="${PI/2.0} 0 0" /-->
          <geometry>
            <mesh filename="package://robospect_description/meshes/bases/robospect_fifth.dae" scale="1 1 1"/>
          </geometry>
@@ -286,11 +288,11 @@
 	
 	<!-- SIXTH_JOINT -->
       <joint name="crane_sixth_joint" type="revolute">
-        <axis xyz="0 0 -1"/>
+        <axis xyz="0 0 1"/>
         <limit effort="1000.0" lower="${joint_6_lower_limit}" upper="${joint_6_upper_limit}" velocity="0.5"/>
         <!--origin xyz="0.0 0.0 0.252" rpy="0 ${PI/2.0} 0" /-->  
-        <!--origin xyz="0 -0.252 0" rpy="0 0 -${PI/2}" /-->  
-        <origin xyz="0 -0.252 0" rpy="0 0 0" />  
+        <origin xyz="-0.11266 -0.23432 0" rpy="0 0 -${PI/2}" />  
+        <!--origin xyz="0 -0.252 0" rpy="0 0 0" /-->  
         <parent link="fifth_link"/>
         <child link="sixth_link"/>
       </joint>
@@ -313,6 +315,21 @@
         <origin xyz="0 0 0" />
         <inertia  ixx="1.391" ixy="0.004"  ixz="0.0"  iyy="6.853"  iyz="0.0"  izz="6.125" />
       </inertial>
+       <visual>
+         <origin xyz="0.685 0.15 0" rpy="0 0 0" />
+         <geometry>
+			<box size="1.370 0.3 0.15" />
+		</geometry>
+         <material name="Gray">
+			<color rgba="0 0 0 0.8"/>
+		</material>
+      </visual>
+      <collision>
+         <origin xyz="0.685 0.15 0" rpy="0 0 0" />
+         <geometry>
+			<box size="1.370 0.3 0.15" />
+		</geometry>
+      </collision>
     </link>
     
     <!-- SEVENTH_JOINT -->
@@ -320,10 +337,11 @@
       <joint name="crane_seventh_joint" type="revolute">
         <axis xyz="0 0 1"/>
         <limit effort="1000.0" lower="-1.57" upper="1.57" velocity="0.5"/>
-        <origin xyz="1.239 0 0" rpy="0 0 ${joint_7_yaw -PI/2.0}" />  
+        <!--origin xyz="1.239 0 0" rpy="0 0 ${joint_7_yaw -PI/2.0}" /-->  
+        <origin xyz="1.239 0 0" rpy="0 0 0" />  
         <parent link="sixth_link"/>
         <child link="seventh_link"/>
-        <mimic joint="crane_sixth_joint" multiplier="1.0" offset="0.0"/> 
+        <mimic joint="crane_sixth_joint" multiplier="-1.0" offset="0.0"/> 
       </joint>
 
       <transmission name="crane_seventh_joint_trans">
