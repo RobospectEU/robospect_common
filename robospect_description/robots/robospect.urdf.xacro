@@ -87,17 +87,41 @@
 	
 	<!-- ARM UC3M -->
     <joint name="arm_joint" type="fixed">
-	  <origin xyz="0.731 0.0 0.153" rpy="0 0 ${-PI/2}"/>
+	  <origin xyz="0.781 0.0 0.153" rpy="0 0 0.0"/>
       <parent link="tip_link"/>
       <child link="arm_link"/>
 	 </joint>
   
 	 <link name="arm_link">
-		<inertial>
-			<mass value="1e-5" />
-			<origin xyz="0 0 0" rpy="0 0 0"/>
-			<inertia ixx="1e-6" ixy="0" ixz="0" iyy="1e-6" iyz="0" izz="1e-6" />
-		</inertial>
+	 </link>
+	 
+	 
+	<!-- CAMERA REFERENCE FRAMES -->
+    <joint name="camera_ref_1_joint" type="fixed">
+	  <origin xyz="-0.360 -0.13  0.163" rpy="0 0 0"/>
+      <parent link="arm_link"/>
+      <child link="camera_ref_1_link"/>
+	 </joint>
+  
+	 <link name="camera_ref_1_link">
+	 </link>
+    
+    <joint name="camera_ref_2_joint" type="fixed">
+	  <origin xyz="-0.446 -0.13  0.163" rpy="0 0 0"/>
+      <parent link="arm_link"/>
+      <child link="camera_ref_2_link"/>
+	 </joint>
+  
+	 <link name="camera_ref_2_link">
+	 </link>
+	 
+    <joint name="camera_ref_3_joint" type="fixed">
+	  <origin xyz="-0.446 -0.13 0.283" rpy="0 0 0"/>
+      <parent link="arm_link"/>
+      <child link="camera_ref_3_link"/>
+	 </joint>
+  
+	 <link name="camera_ref_3_link">
 	 </link>
 
 	

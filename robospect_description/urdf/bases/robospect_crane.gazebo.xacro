@@ -40,16 +40,15 @@
   <gazebo reference="fourth_link">
     <material>Gazebo/SkyBlue</material>
   </gazebo>
+  <gazebo reference="fourth_base_link">
+    <material>Gazebo/SkyBlue</material>
+  </gazebo>
 
   <gazebo reference="fifth_link">
     <material>Gazebo/SkyBlue</material>
   </gazebo>
 
   <gazebo reference="sixth_link">
-    <material>Gazebo/SkyBlue</material>
-  </gazebo>
-
-  <gazebo reference="sixth_aux_link">
     <material>Gazebo/SkyBlue</material>
   </gazebo>
 
