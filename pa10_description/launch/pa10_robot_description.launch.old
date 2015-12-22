@@ -1,0 +1,3 @@
+<launch>
+    <param name="robot_description" command="cat $(find pa10_description)/urdf/pa10.urdf"/>
+</launch>
