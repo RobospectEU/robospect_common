@@ -19,3 +19,5 @@ float32 desired_freq
 float32 real_freq
 # Description of the state
 string state_description
+# Control mode (POSITION, VELOCITY)
+string control_mode
