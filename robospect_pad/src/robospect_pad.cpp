@@ -286,7 +286,7 @@ RobospectPad::RobospectPad():
 	pnh_.param("button_ptz_pan_left", ptz_pan_left_, ptz_pan_left_);
 
 	// CRANE JOINT names
-	pnh_.param("Joints_vector_length", joint_vector_length, 8);
+	pnh_.param("Joints_vector_length", joint_vector_length, 6);
 	for(int i= 0; i<joint_vector_length;i++)
 		JointNames.push_back("");
 
@@ -294,26 +294,11 @@ RobospectPad::RobospectPad():
 	pnh_.param<std::string>("joint2_name", JointNames[1], "crane_second_joint");
 	pnh_.param<std::string>("joint3_name", JointNames[2], "crane_third_joint");
 	pnh_.param<std::string>("joint4_name", JointNames[3], "crane_fourth_joint");
-	pnh_.param<std::string>("joint5_name", JointNames[4], "crane_fifth_joint");
-	pnh_.param<std::string>("joint6_name", JointNames[5], "crane_sixth_joint");
-  //pnh_.param<std::string>("joint7_name", JointNames[6], "crane_sixth_aux_1_joint");
-	//pnh_.param<std::string>("joint8_name", JointNames[7], "crane_sixth_aux_2_joint");
-	//pnh_.param<std::string>("joint9_name", JointNames[8], "crane_sixth_aux_3_joint");
-	//pnh_.param<std::string>("joint10_name", JointNames[9], "crane_sixth_aux_4_joint");
-	pnh_.param<std::string>("joint11_name", JointNames[6], "crane_seventh_joint");
-	pnh_.param<std::string>("joint12_name", JointNames[7], "crane_tip_joint");
-	//pnh_.param<std::string>("joint13_name", JointNames[12], "left_front_axle_joint");
-	//pnh_.param<std::string>("joint14_name", JointNames[13], "right_front_axle_joint");
-	//pnh_.param<std::string>("joint15_name", JointNames[14], "left_rear_steering_joint");
-	//pnh_.param<std::string>("joint16_name", JointNames[15], "left_rear_axle_joint");
-	//pnh_.param<std::string>("joint17_name", JointNames[16], "right_rear_steering_joint");
-	//pnh_.param<std::string>("joint18_name", JointNames[17], "right_rear_axle_joint");
-	//pnh_.param<std::string>("joint19_name", JointNames[18], "center_rear_steering_joint");
-	//pnh_.param<std::string>("joint20_name", JointNames[19], "joint_camera_pan");
-	//pnh_.param<std::string>("joint21_name", JointNames[20], "joint_camera_tilt");
-
+	pnh_.param<std::string>("joint5_name", JointNames[4], "crane_sixth_joint");
+	pnh_.param<std::string>("joint6_name", JointNames[5], "crane_tip_joint");
 
 	ROS_INFO("RobospectPad num_of_buttons_ = %d, axes = %d, topic controller: %s, hz = %.2lf", num_of_buttons_, num_of_axes_, cmd_topic_vel.c_str(), desired_freq_);
+	ROS_INFO("RobospectPad: arm deadman button = %d", button_arm_dead_man_);
 
 	for(int i = 0; i < MAX_NUM_OF_BUTTONS_PS3; i++){
 		Button b;
@@ -465,7 +450,6 @@ void RobospectPad::ControlLoop(){
 
 
 			if(vButtons[button_arm_dead_man_].IsPressed()){
-
 				desired_linear_arm_speed = max_linear_arm_speed_ * current_arm_speed_lvl * fAxes[axis_linear_speed_];
 				//desired_angular_arm_speed = max_angular_arm_speed_ * current_arm_speed_lvl * fAxes[axis_angular_position_];
 
@@ -473,6 +457,8 @@ void RobospectPad::ControlLoop(){
 				joints_msg.header.stamp = ros::Time::now();
 				joints_msg.name.push_back(JointNames[joint_index]);
 				joints_msg.velocity.push_back(desired_linear_arm_speed);
+				joints_msg.position.push_back(0.0);
+				joints_msg.effort.push_back(0.0);
 				/*
 				if (joint_index == 0 || joint_index == 3 || joint_index == 7 ) {  //different axis for some joints
 					joints_msg.velocity.push_back(desired_angular_arm_speed);
@@ -497,22 +483,24 @@ void RobospectPad::ControlLoop(){
 				// Select the arm joint to move
 				if(vButtons[button_joint_up_].IsReleased()){
 					joint_index += 1;
-					if(joint_index > NUMBER_OF_DRIVEN_JOINTS)
-						joint_index = NUMBER_OF_DRIVEN_JOINTS -1;
+					if(joint_index >= joint_vector_length)
+						joint_index = joint_vector_length -1;
 				}
 				if(vButtons[button_joint_down_].IsReleased()){
 					joint_index -= 1;
 					if(joint_index < 0)
-						joint_index = 0 ;
+						joint_index = 0;
 				}
 
 			}else if(vButtons[button_dead_man_].IsReleased()){
 
 				joints_msg.header.stamp = ros::Time::now();
 
-				for (size_t i = 0; i < 8; i++) {
+				for (size_t i = 0; i < joint_vector_length; i++) {
 					joints_msg.name.push_back(JointNames[joint_index]);
 					joints_msg.velocity.push_back(desired_linear_arm_speed);
+					joints_msg.position.push_back(0.0);
+					joints_msg.effort.push_back(0.0);
 				}
 
 				//ROS_INFO("RobospectPad::ControlLoop: Deadman released!");
