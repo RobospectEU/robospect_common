@@ -4,25 +4,24 @@
 
   <xacro:include filename="$(find robospect_description)/urdf/bases/robospect_crane.gazebo.xacro" />
   <xacro:property name="PI" value="3.141592"/>
+
   <xacro:property name="joint_1_lower_limit" value="-1.57079"/>
   <xacro:property name="joint_1_upper_limit" value="1.57079"/>
   <xacro:property name="joint_2_lower_limit" value="0.0"/>
   <xacro:property name="joint_2_upper_limit" value="1.824"/>
-  <xacro:property name="joint_3_lower_limit" value="-0.03"/>
-  <xacro:property name="joint_3_upper_limit" value="0.4861"/>
+  <xacro:property name="joint_3_lower_limit" value="0.0"/>
+  <xacro:property name="joint_3_upper_limit" value="0.5161"/>
   <xacro:property name="joint_4_lower_limit" value="0.0"/>
   <xacro:property name="joint_4_upper_limit" value="1.523"/>
-  <xacro:property name="joint_6_lower_limit" value="-1.2397"/>
-  <xacro:property name="joint_6_upper_limit" value="0.8283"/>
+  <xacro:property name="joint_6_lower_limit" value="0.0"/>
+  <xacro:property name="joint_6_upper_limit" value="2.064"/>
   <xacro:property name="joint_5_lower_limit" value="0.0"/>
   <xacro:property name="joint_5_upper_limit" value="1.155"/>
-  <!--xacro:property name="joint_5_lower_limit" value="-0.4569"/>
-  <xacro:property name="joint_5_upper_limit" value="0.6981"/-->
   
-  <xacro:property name="joint_5_yaw" value="0.6981"/>
+  <xacro:property name="joint_5_pitch" value="0.6981"/>
   <!--xacro:property name="joint_6_pitch" value="-${joint_6_upper_limit/2.0}"/-->
   <xacro:property name="joint_6_pitch" value="1.5707"/>
-  <xacro:property name="joint_7_yaw" value="0.5061"/>
+  <xacro:property name="joint_7_pitch" value="0.5061"/>
   
   
   <xacro:macro name="robospect_crane" params="parent *origin">
@@ -32,7 +31,6 @@
     <joint name="crane_first_joint" type="revolute">
       <axis xyz="0 0 1"/>
       <limit effort="1000.0" lower="${joint_1_lower_limit}" upper="${joint_1_upper_limit}" velocity="0.5"/>
-      <!--origin xyz="-0.073 0 0.287" rpy="0 0 0" /-->  
       <insert_block name="origin" />
       <parent link="${parent}"/>
       <child link="first_link"/>
@@ -81,11 +79,11 @@
 
 
 
-	<!-- SECOND_JOINT -->
+  <!-- SECOND_JOINT -->
 
     <joint name="crane_second_joint" type="prismatic">
       <axis xyz="0 0 1"/>
-      <limit effort="50000.0" lower="${joint_2_lower_limit}" upper="${joint_2_upper_limit}" velocity="0.25"/>
+      <limit effort="1000.0" lower="${joint_2_lower_limit}" upper="${joint_2_upper_limit}" velocity="0.5"/>
       <origin xyz="-0.305 0 1.400" rpy="0 0 0" /> 
       <parent link="first_link"/>
       <child link="second_link"/>
@@ -108,7 +106,7 @@
 
   <link name="second_link">
     <inertial>
-      <mass value="10.0" />
+      <mass value="2.0" />
       <origin xyz="0 0 0" />
       <inertia  ixx="1.391" ixy="0.004"  ixz="0.0"  iyy="6.853"  iyz="0.0"  izz="6.125" />
     </inertial>
@@ -131,31 +129,31 @@
 
     <!-- THIRD_JOINT -->
 
-	<joint name="crane_third_joint" type="revolute">
-		<axis xyz="0 0 1"/>
-		<limit effort="100000.0" lower="${joint_3_lower_limit}" upper="${joint_3_upper_limit}" velocity="0.2"/>
-		<origin xyz="0 0 0" rpy="${PI/2.0} 0 0" />  <!-- height is the clearance -->
-		<parent link="second_link"/>
-		<child link="third_link"/>
-	</joint>
+      <joint name="crane_third_joint" type="revolute">
+        <axis xyz="0 -1 0"/>
+        <limit effort="100000.0" lower="${joint_3_lower_limit}" upper="${joint_3_upper_limit}" velocity="0.2"/>
+        <origin xyz="0 0 0" rpy="0 0 0" />  <!-- height is the clearance -->
+        <parent link="second_link"/>
+        <child link="third_link"/>
+      </joint>
 
-	<transmission name="crane_third_joint_trans">
-		<type>transmission_interface/SimpleTransmission</type>
-		<joint name="crane_third_joint">
-		  <hardwareInterface>EffortJointInterface</hardwareInterface>
-		</joint>
-		<actuator name="crane_third_joint_act">
-		  <hardwareInterface>EffortJointInterface</hardwareInterface>
-		  <mechanicalReduction>1</mechanicalReduction>
-		</actuator>
-	</transmission>
+      <transmission name="crane_third_joint_trans">
+        <type>transmission_interface/SimpleTransmission</type>
+        <joint name="crane_third_joint">
+          <hardwareInterface>EffortJointInterface</hardwareInterface>
+        </joint>
+        <actuator name="crane_third_joint_act">
+          <hardwareInterface>EffortJointInterface</hardwareInterface>
+          <mechanicalReduction>1</mechanicalReduction>
+        </actuator>
+      </transmission>
 
     <!-- THIRD_LINK -->
 
     <link name="third_link">
       <inertial>
         <mass value="2.0" />
-        <origin xyz="0 0 0" rpy="${PI/2.0} 0 0"/>
+        <origin xyz="0 0 0" />
         <inertia  ixx="1.391" ixy="0.004"  ixz="0.0"  iyy="6.853"  iyz="0.0"  izz="6.125" />
       </inertial>
       <visual>
@@ -167,59 +165,46 @@
          </material>
       </visual>
       <collision>
-         <origin xyz="0 0 0" rpy="${PI/2.0} 0 0" />
+         <origin xyz="0 0 0" rpy="0 0 0 " />
          <geometry>
            <mesh filename="package://robospect_description/meshes/bases/robospect_third.dae" scale="1 1 1"/>
          </geometry>
       </collision>
     </link>
-	
-	<!-- FOURTH_JOINT -->
-	<joint name="crane_fourth_base_joint" type="fixed">
-		<axis xyz="0 0 1"/>
-		<!--origin xyz="2.8 0 0.04" rpy="0 0 0" /--> 
-		<origin xyz="0.774 0 -0.087" rpy="0 ${PI/2} 0" /> 
-		<parent link="third_link"/>
-		<child link="fourth_base_link"/>
-	</joint>
-	<link name="fourth_base_link">
-		<inertial>
-			<mass value="2.0" />
-			<origin xyz="0 0 0"/>
-			<inertia  ixx="1.391" ixy="0.004"  ixz="0.0"  iyy="6.853"  iyz="0.0"  izz="6.125" />
-		</inertial>
-	</link>
-	
-	<joint name="crane_fourth_joint" type="prismatic">
-		<axis xyz="0 0 1"/>
-		<limit effort="1000.0" lower="${joint_4_lower_limit}" upper="${joint_4_upper_limit}" velocity="0.5"/>
-		<!--origin xyz="2.8 0 0.04" rpy="0 0 0" /--> 
-		<origin xyz="0.0 0 0.0" rpy="0 0 -${PI/2}" /> 
-		<parent link="fourth_base_link"/>
-		<child link="fourth_link"/>
-	</joint>
 
-	<transmission name="crane_fourth_joint_trans">
-		<type>transmission_interface/SimpleTransmission</type>
-		<joint name="crane_fourth_joint">
-		  <hardwareInterface>EffortJointInterface</hardwareInterface>
-		</joint>
-		<actuator name="crane_fourth_joint_act">
-		  <hardwareInterface>EffortJointInterface</hardwareInterface>
-		  <mechanicalReduction>1</mechanicalReduction>
-		</actuator>
-	</transmission>
+
+    <!-- FOURTH_JOINT -->
+
+      <joint name="crane_fourth_joint" type="prismatic">
+        <axis xyz="1 0 0"/>
+        <limit effort="1000.0" lower="${joint_4_lower_limit}" upper="${joint_4_upper_limit}" velocity="0.5"/>
+        <!--origin xyz="2.8 0 0.04" rpy="0 0 0" /--> 
+        <origin xyz="0.774 0 -0.087" rpy="0 0 0" />  <!-- height is the clearance -->
+        <parent link="third_link"/>
+        <child link="fourth_link"/>
+      </joint>
+
+      <transmission name="crane_fourth_joint_trans">
+        <type>transmission_interface/SimpleTransmission</type>
+        <joint name="crane_fourth_joint">
+          <hardwareInterface>EffortJointInterface</hardwareInterface>
+        </joint>
+        <actuator name="crane_fourth_joint_act">
+          <hardwareInterface>EffortJointInterface</hardwareInterface>
+          <mechanicalReduction>1</mechanicalReduction>
+        </actuator>
+      </transmission>
 
     <!-- FOURTH_LINK -->
 
     <link name="fourth_link">
       <inertial>
         <mass value="2.0" />
-        <origin xyz="0 0 0"/>
+        <origin xyz="0 0 0" />
         <inertia  ixx="1.391" ixy="0.004"  ixz="0.0"  iyy="6.853"  iyz="0.0"  izz="6.125" />
       </inertial>
       <visual>
-         <origin xyz="0 0 0" rpy="0 -${PI/2} 0" />
+         <origin xyz="0 0 0" rpy="0 0 0" />
          <geometry>
             <mesh filename="package://robospect_description/meshes/bases/robospect_fourth.dae" scale="1 1 1"/>
          </geometry>
@@ -233,18 +218,19 @@
          </geometry>
       </collision>
     </link>
-    
-    <!-- FIFTH_JOINT -->
+
+
+      <!-- FIFTH_JOINT -->
 
       <joint name="crane_fifth_joint" type="revolute">
-        <axis xyz="0 0 -1"/>
-        <!--limit effort="1000.0" lower="${joint_5_lower_limit}" upper="${joint_5_upper_limit}" velocity="0.5"/-->
-        <limit effort="1000.0" lower="-${PI/2}" upper="${PI/2}" velocity="0.5"/>
-        <origin xyz="-0.132 0.0 2.084" rpy="-${PI/2.0} 0.0 0" />  
-        <!--origin xyz="-0.132 0.0 2.084" rpy="-${PI/2.0} ${joint_5_yaw - joint_5_upper_limit} 0" /-->  
+        <axis xyz="0 -1 0"/>
+        <limit effort="1000.0" lower="${joint_5_lower_limit}" upper="${joint_5_upper_limit}" velocity="0.5"/>
+        <!--origin xyz="2.084 0 0.132" rpy="0 ${PI/2 + joint_5_pitch} 0" /-->  
+        <origin xyz="2.084 0 0.132" rpy="0 ${PI/2 + joint_5_pitch} 0" />  
         <parent link="fourth_link"/>
         <child link="fifth_link"/>
-        <mimic joint="crane_third_joint" multiplier="-1.0" offset="0.0"/> 
+        <!--mimic joint="crane_third_joint" multiplier="-1.0" offset="0.0"/--> 
+
       </joint>
 
       <transmission name="crane_fifth_joint_trans">
@@ -268,7 +254,7 @@
         <inertia  ixx="1.391" ixy="0.004"  ixz="0.0"  iyy="6.853"  iyz="0.0"  izz="6.125" />
       </inertial>
       <visual>
-         <origin xyz="0 0 0" rpy="${PI/2.0} 0 -0.4569" />
+         <origin xyz="0 0 0" rpy="0 0 0" />
          <geometry>
             <mesh filename="package://robospect_description/meshes/bases/robospect_fifth.dae" scale="1 1 1"/>
          </geometry>
@@ -276,21 +262,19 @@
          </material>
       </visual>
       <collision>
-         <origin xyz="0 0 0" rpy="${PI/2.0} 0 -0.4569" />
-         <!--origin xyz="0 0 0" rpy="${PI/2.0} 0 0" /-->
+         <origin xyz="0 0 0" rpy="0 0 0 " />
          <geometry>
            <mesh filename="package://robospect_description/meshes/bases/robospect_fifth.dae" scale="1 1 1"/>
          </geometry>
       </collision>
     </link>
-	
-	<!-- SIXTH_JOINT -->
+    
+     <!-- SIXTH_JOINT -->
+
       <joint name="crane_sixth_joint" type="revolute">
-        <axis xyz="0 0 -1"/>
+        <axis xyz="0 -1 0"/>
         <limit effort="1000.0" lower="${joint_6_lower_limit}" upper="${joint_6_upper_limit}" velocity="0.5"/>
-        <!--origin xyz="0.0 0.0 0.252" rpy="0 ${PI/2.0} 0" /-->  
-        <origin xyz="-0.11266 -0.23432 0" rpy="0 0 -${PI/2}" />  
-        <!--origin xyz="0 -0.252 0" rpy="0 0 0" /-->  
+        <origin xyz="0.0 0.0 0.252" rpy="0 ${PI/2.0} 0" />  
         <parent link="fifth_link"/>
         <child link="sixth_link"/>
       </joint>
@@ -313,30 +297,14 @@
         <origin xyz="0 0 0" />
         <inertia  ixx="1.391" ixy="0.004"  ixz="0.0"  iyy="6.853"  iyz="0.0"  izz="6.125" />
       </inertial>
-       <visual>
-         <origin xyz="0.685 0.15 0" rpy="0 0 0" />
-         <geometry>
-			<box size="1.370 0.3 0.15" />
-		</geometry>
-         <material name="Gray">
-			<color rgba="0 0 0 0.8"/>
-		</material>
-      </visual>
-      <collision>
-         <origin xyz="0.685 0.15 0" rpy="0 0 0" />
-         <geometry>
-			<box size="1.370 0.3 0.15" />
-		</geometry>
-      </collision>
     </link>
     
-    <!-- SEVENTH_JOINT -->
+     <!-- SEVENTH_JOINT -->
 
       <joint name="crane_seventh_joint" type="revolute">
-        <axis xyz="0 0 1"/>
+        <axis xyz="0 1 0"/>
         <limit effort="1000.0" lower="-1.57" upper="1.57" velocity="0.5"/>
-        <!--origin xyz="1.239 0 0" rpy="0 0 ${joint_7_yaw -PI/2.0}" /-->  
-        <origin xyz="1.239 0 0" rpy="0 0 0" />  
+        <origin xyz="0 0 1.239" rpy="0 ${PI + joint_7_pitch} 0" />  
         <parent link="sixth_link"/>
         <child link="seventh_link"/>
         <mimic joint="crane_sixth_joint" multiplier="1.0" offset="0.0"/> 
@@ -348,6 +316,8 @@
           <hardwareInterface>EffortJointInterface</hardwareInterface>
         </joint>
         <actuator name="crane_seventh_joint_act">
+          <!-- This hardwareInterface element exists for compatibility
+               with ROS Hydro. -->
           <hardwareInterface>EffortJointInterface</hardwareInterface>
           <mechanicalReduction>1</mechanicalReduction>
         </actuator>
@@ -363,7 +333,7 @@
         <inertia  ixx="1.391" ixy="0.004"  ixz="0.0"  iyy="6.853"  iyz="0.0"  izz="6.125" />
       </inertial>
       <visual>
-         <origin xyz="0 0 0" rpy="${PI/2.0} 0 0" />
+         <origin xyz="0 0 0" rpy="0 0 0" />
          <geometry>
             <mesh filename="package://robospect_description/meshes/bases/robospect_seventh.dae" scale="1 1 1"/>
          </geometry>
@@ -371,20 +341,19 @@
          </material>
       </visual>
       <collision>
-         <origin xyz="0 0 0" rpy="${PI/2.0} 0 0 " />
+         <origin xyz="0 0 0" rpy="0 0 0 " />
          <geometry>
            <mesh filename="package://robospect_description/meshes/bases/robospect_seventh.dae" scale="1 1 1"/>
          </geometry>
       </collision>
     </link>
     
-     <!-- TIP_JOINT -->
+        <!-- TIP_JOINT -->
 
       <joint name="crane_tip_joint" type="revolute">
         <axis xyz="0 0 1"/>
         <limit effort="1000.0" lower="-${90 * PI / 180}" upper="${90 * PI / 180}" velocity="0.5"/>
-        <!--origin xyz="0.164 0.0 -0.155" rpy="0 0 0" /--> 
-        <origin xyz="0.164 0.0 0.0" rpy="${PI/2.0} 0 0" /> 
+        <origin xyz="0.164 0.0 -0.155" rpy="0 0 0" /> 
         <parent link="seventh_link"/>
         <child link="tip_link"/>
       </joint>
@@ -409,7 +378,7 @@
         <inertia  ixx="1.391" ixy="0.004"  ixz="0.0"  iyy="6.853"  iyz="0.0"  izz="6.125" />
       </inertial>
       <visual>
-         <origin xyz="0 0 -0.155" rpy="0 0 0" />
+         <origin xyz="0 0 0" rpy="0 0 0" />
          <geometry>
             <mesh filename="package://robospect_description/meshes/bases/robospect_head.dae" scale="1 1 1"/>
          </geometry>
@@ -423,8 +392,7 @@
          </geometry>
       </collision>
     </link>
-    
-    
+
   </xacro:macro>
 
 </robot>

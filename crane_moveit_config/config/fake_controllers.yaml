@@ -1,0 +1,12 @@
+controller_list:
+  - name: fake_crane_arm_controller
+    joints:
+      - crane_first_joint
+      - crane_second_joint
+      - crane_third_joint
+      - crane_fourth_joint
+      - crane_sixth_joint
+      - crane_tip_joint
+  - name: fake_crane_tip_controller
+    joints:
+      - crane_tip_joint
