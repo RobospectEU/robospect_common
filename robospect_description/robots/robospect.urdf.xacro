@@ -126,9 +126,9 @@
 	 <link name="camera_ref_3_link">
 	 </link>
 	 
-	 <xacro:mitsubishi_pa10  parent="arm_link">
+	 <!--xacro:mitsubishi_pa10  parent="arm_link">
 		<origin xyz="0.0 0.0 0.0" rpy="0 0 ${PI/2}"/>
-	</xacro:mitsubishi_pa10>
+	</xacro:mitsubishi_pa10-->
 
 	
 <!--
