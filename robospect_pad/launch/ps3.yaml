@@ -13,13 +13,11 @@ button_dead_man: 11
 button_arm_dead_man: 10
 button_joint_up: 15
 button_joint_down: 13
-output_1: 0
-output_2: 2
 button_ptz_tilt_up: 4
 button_ptz_tilt_down: 6
 button_ptz_pan_right: 5
 button_ptz_pan_left: 7
-button_kinematic_mode: 9
+button_control_mode: 0
 tilt_increment: 5
 pan_increment: 5
 max_angular_position: 0.52

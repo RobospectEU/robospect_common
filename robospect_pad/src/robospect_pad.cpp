@@ -38,7 +38,6 @@
 #include <unistd.h>
 #include <vector>
 #include <robotnik_msgs/enable_disable.h>
-#include <robotnik_msgs/set_digital_output.h>
 #include "diagnostic_msgs/DiagnosticStatus.h"
 #include "diagnostic_updater/diagnostic_updater.h"
 #include "diagnostic_updater/update_functions.h"
@@ -50,6 +49,8 @@
 #include "robotnik_msgs/get_mode.h"
 
 #include <sensor_msgs/JointState.h>
+#include <robospect_msgs/SetControlMode.h>
+
 
 #define DEFAULT_MAX_LINEAR_SPEED	    3.0 //m/s
 #define DEFAULT_MAX_ANGULAR_POSITION	0.5 // rads/s
@@ -155,8 +156,6 @@ private:
 	std::string  joy_topic_;
 	//! Name of the topic where it will be publishing the velocity
 	std::string cmd_topic_vel;
-	//! Name of the service where it will be modifying the digital outputs
-	std::string cmd_service_io_;
 	//! topic name for the state
 	std::string topic_state_;
 	//! Topic to publish the state
@@ -169,7 +168,10 @@ private:
 	// SERVICES
 	//! Service clients
 	ros::ServiceServer enable_disable_srv_;
-	ros::ServiceClient set_digital_outputs_client_;
+	//! Service to modify the pad control mode
+	ros::ServiceClient set_control_mode_srv_;
+	//! Name of the service to change the mode
+	std::string set_control_mode_service_name_;
 
 	// JOYSTICK
 	//! Current number of buttons of the joystick
@@ -188,21 +190,14 @@ private:
 	int button_speed_up_, button_speed_down_;
 	//! Number of the button for increase or decrease the number of the joint selected
 	int button_joint_up_, button_joint_down_;
+	//! Number of the button to set the control mode in velocity
+	int button_control_mode_;
 
-	int output_1_, output_2_;
-	bool bOutput1, bOutput2;
 	//! buttons to the pan-tilt camera
 	int ptz_tilt_up_, ptz_tilt_down_, ptz_pan_right_, ptz_pan_left_;
 	//! Name of the service to move ptz
 	std::string cmd_service_ptz_;
-	//! button to change kinematic mode
-	int button_kinematic_mode_;
-  	//! kinematic mode
-	int kinematic_mode_;
-	//! Service to modify the kinematic mode
-	ros::ServiceClient setKinematicMode;
-	//! Name of the service to change the mode
-	std::string cmd_set_mode_;
+	
 
 	// DIAGNOSTICS
 	//! Diagnostic to control the frequency of the published command velocity topic
@@ -259,6 +254,7 @@ RobospectPad::RobospectPad():
 	pnh_.param("button_arm_dead_man", button_arm_dead_man_, button_arm_dead_man_);
 	pnh_.param("button_joint_up", button_joint_up_, button_joint_up_);
 	pnh_.param("button_joint_down", button_joint_down_, button_joint_down_);
+	pnh_.param("button_control_mode", button_control_mode_, 0);
 
 	pnh_.param("button_dead_man", button_dead_man_, button_dead_man_);
 	pnh_.param("button_speed_up", button_speed_up_, button_speed_up_);
@@ -273,9 +269,7 @@ RobospectPad::RobospectPad():
 	ROS_INFO("max_linear_speed = %lf, max_angular_speed = %lf", max_linear_speed_, max_angular_position_);
 
 	// DIGITAL OUTPUTS CONF
-	pnh_.param("cmd_service_io", cmd_service_io_, cmd_service_io_);
-	pnh_.param("output_1", output_1_, output_1_);
-	pnh_.param("output_2", output_2_, output_2_);
+	pnh_.param("set_control_mode_service_name", set_control_mode_service_name_, std::string("/robospect_platform_controller/set_control_mode"));
 	pnh_.param("topic_state", topic_state_, std::string("/robospect_pad/state"));
 
 	// PANTILT CONF
@@ -310,7 +304,7 @@ RobospectPad::RobospectPad():
 	}
 
 
-  this->vel_pub_ = nh_.advertise<ackermann_msgs::AckermannDriveStamped>(this->cmd_topic_vel, 1);
+	this->vel_pub_ = nh_.advertise<ackermann_msgs::AckermannDriveStamped>(this->cmd_topic_vel, 1);
 
 	this->joint_pub_ = nh_.advertise<sensor_msgs::JointState>(this->joint_state_topic, 1);
 
@@ -318,9 +312,7 @@ RobospectPad::RobospectPad():
 	joy_sub_ = nh_.subscribe<sensor_msgs::Joy>(joy_topic_, 1, &RobospectPad::joyCallback, this);
 
  	// Request service to activate / deactivate digital I/O
-	set_digital_outputs_client_ = nh_.serviceClient<robotnik_msgs::set_digital_output>(cmd_service_io_);
-
-	bOutput1 = bOutput2 = false;
+	set_control_mode_srv_ = nh_.serviceClient<robospect_msgs::SetControlMode>(set_control_mode_service_name_);
 
 	// Diagnostics
 	updater_pad.setHardwareID("RobospectPad");
@@ -448,7 +440,12 @@ void RobospectPad::ControlLoop(){
 				vel_pub_.publish(ref_msg);// Publish into command_vel topic
 			}
 
-
+			if(vButtons[button_control_mode_].IsReleased()){
+				robospect_msgs::SetControlMode srv;
+				srv.request.mode = "VELOCITY";
+				if(set_control_mode_srv_.call(srv) != true)
+					ROS_ERROR("robospect_pad::ControlLoop: Error calling set control mode service");
+			}
 			if(vButtons[button_arm_dead_man_].IsPressed()){
 				desired_linear_arm_speed = max_linear_arm_speed_ * current_arm_speed_lvl * fAxes[axis_linear_speed_];
 				//desired_angular_arm_speed = max_angular_arm_speed_ * current_arm_speed_lvl * fAxes[axis_angular_position_];
@@ -459,13 +456,7 @@ void RobospectPad::ControlLoop(){
 				joints_msg.velocity.push_back(desired_linear_arm_speed);
 				joints_msg.position.push_back(0.0);
 				joints_msg.effort.push_back(0.0);
-				/*
-				if (joint_index == 0 || joint_index == 3 || joint_index == 7 ) {  //different axis for some joints
-					joints_msg.velocity.push_back(desired_angular_arm_speed);
-				}else{
-					joints_msg.velocity.push_back(desired_linear_arm_speed);
-				}
-				*/
+				
 				// Publish into command_vel topic
 				joint_pub_.publish(joints_msg);
 
@@ -491,6 +482,7 @@ void RobospectPad::ControlLoop(){
 					if(joint_index < 0)
 						joint_index = 0;
 				}
+				
 
 			}else if(vButtons[button_dead_man_].IsReleased()){
 
@@ -498,7 +490,7 @@ void RobospectPad::ControlLoop(){
 
 				for (size_t i = 0; i < joint_vector_length; i++) {
 					joints_msg.name.push_back(JointNames[joint_index]);
-					joints_msg.velocity.push_back(desired_linear_arm_speed);
+					joints_msg.velocity.push_back(0.0);
 					joints_msg.position.push_back(0.0);
 					joints_msg.effort.push_back(0.0);
 				}
