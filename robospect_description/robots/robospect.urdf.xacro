@@ -89,7 +89,7 @@
 	
 	<!-- ARM UC3M -->
     <joint name="arm_joint" type="fixed">
-	  <origin xyz="0.781 0.0 0.153" rpy="0 0 0.0"/>
+	  <origin xyz="0.74933 0.0 0.153" rpy="0 0 0.0"/>
       <parent link="tip_link"/>
       <child link="arm_link"/>
 	 </joint>
@@ -124,6 +124,33 @@
 	 </joint>
   
 	 <link name="camera_ref_3_link">
+	 </link>
+	 
+    <joint name="camera_ref_4_joint" type="fixed">
+	  <origin xyz="0.0285 -0.320  0.026" rpy="0 0 0"/>
+      <parent link="arm_link"/>
+      <child link="camera_ref_4_link"/>
+	 </joint>
+  
+	 <link name="camera_ref_4_link">
+	 </link>
+    
+    <joint name="camera_ref_5_joint" type="fixed">
+	  <origin xyz="-0.450 -0.320  0.0286" rpy="0 0 0"/>
+      <parent link="arm_link"/>
+      <child link="camera_ref_5_link"/>
+	 </joint>
+  
+	 <link name="camera_ref_5_link">
+	 </link>
+	 
+    <joint name="camera_ref_6_joint" type="fixed">
+	  <origin xyz="-0.510 -0.320 -0.4212" rpy="0 0 0"/>
+      <parent link="arm_link"/>
+      <child link="camera_ref_6_link"/>
+	 </joint>
+  
+	 <link name="camera_ref_6_link">
 	 </link>
 	 
 	 <!--xacro:mitsubishi_pa10  parent="arm_link">

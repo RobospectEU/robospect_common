@@ -60,6 +60,10 @@ Visualization Manager:
         Expand Link Details: false
         Expand Tree: false
         Link Tree Style: Links in Alphabetic Order
+        arm_link:
+          Alpha: 1
+          Show Axes: false
+          Show Trail: false
         base_footprint:
           Alpha: 1
           Show Axes: false
@@ -79,7 +83,35 @@ Visualization Manager:
           Alpha: 1
           Show Axes: false
           Show Trail: false
+        camera_ref_1_link:
+          Alpha: 1
+          Show Axes: false
+          Show Trail: false
+        camera_ref_2_link:
+          Alpha: 1
+          Show Axes: false
+          Show Trail: false
+        camera_ref_3_link:
+          Alpha: 1
+          Show Axes: false
+          Show Trail: false
+        camera_ref_4_link:
+          Alpha: 1
+          Show Axes: false
+          Show Trail: false
+        camera_ref_5_link:
+          Alpha: 1
+          Show Axes: false
+          Show Trail: false
+        camera_ref_6_link:
+          Alpha: 1
+          Show Axes: false
+          Show Trail: false
         camera_tilt_link:
+          Alpha: 1
+          Show Axes: false
+          Show Trail: false
+        center_rear_steering_link:
           Alpha: 1
           Show Axes: false
           Show Trail: false
@@ -93,22 +125,53 @@ Visualization Manager:
           Show Axes: false
           Show Trail: false
           Value: true
+        fourth_base_link:
+          Alpha: 1
+          Show Axes: false
+          Show Trail: false
         fourth_link:
           Alpha: 1
           Show Axes: false
           Show Trail: false
           Value: true
-        front_left_wheel:
-          Alpha: 1
-          Show Axes: false
-          Show Trail: false
-          Value: true
-        front_right_wheel:
+        imu_crane_link:
           Alpha: 1
           Show Axes: false
           Show Trail: false
           Value: true
         imu_link:
+          Alpha: 1
+          Show Axes: false
+          Show Trail: false
+          Value: true
+        left_front_wheel_link:
+          Alpha: 1
+          Show Axes: false
+          Show Trail: false
+          Value: true
+        left_rear_steering_link:
+          Alpha: 1
+          Show Axes: false
+          Show Trail: false
+        left_rear_wheel_link:
+          Alpha: 1
+          Show Axes: false
+          Show Trail: false
+          Value: true
+        nav200_laser_link:
+          Alpha: 1
+          Show Axes: false
+          Show Trail: false
+        right_front_wheel_link:
+          Alpha: 1
+          Show Axes: false
+          Show Trail: false
+          Value: true
+        right_rear_steering_link:
+          Alpha: 1
+          Show Axes: false
+          Show Trail: false
+        right_rear_wheel_link:
           Alpha: 1
           Show Axes: false
           Show Trail: false
@@ -123,7 +186,12 @@ Visualization Manager:
           Show Axes: false
           Show Trail: false
           Value: true
-        sixth_aux_link:
+        sick_front_laser_link:
+          Alpha: 1
+          Show Axes: false
+          Show Trail: false
+          Value: true
+        sick_rear_laser_link:
           Alpha: 1
           Show Axes: false
           Show Trail: false
@@ -154,6 +222,8 @@ Visualization Manager:
       Frame Timeout: 15
       Frames:
         All Enabled: true
+        arm_link:
+          Value: true
         base_footprint:
           Value: true
         base_link:
@@ -162,25 +232,55 @@ Visualization Manager:
           Value: true
         camera_pan_link:
           Value: true
+        camera_ref_1_link:
+          Value: true
+        camera_ref_2_link:
+          Value: true
+        camera_ref_3_link:
+          Value: true
+        camera_ref_4_link:
+          Value: true
+        camera_ref_5_link:
+          Value: true
+        camera_ref_6_link:
+          Value: true
         camera_tilt_link:
+          Value: true
+        center_rear_steering_link:
           Value: true
         fifth_link:
           Value: true
         first_link:
           Value: true
+        fourth_base_link:
+          Value: true
         fourth_link:
           Value: true
-        front_left_wheel:
-          Value: true
-        front_right_wheel:
+        imu_crane_link:
           Value: true
         imu_link:
+          Value: true
+        left_front_wheel_link:
+          Value: true
+        left_rear_steering_link:
+          Value: true
+        left_rear_wheel_link:
+          Value: true
+        nav200_laser_link:
+          Value: true
+        right_front_wheel_link:
+          Value: true
+        right_rear_steering_link:
+          Value: true
+        right_rear_wheel_link:
           Value: true
         second_link:
           Value: true
         seventh_link:
           Value: true
-        sixth_aux_link:
+        sick_front_laser_link:
+          Value: true
+        sick_rear_laser_link:
           Value: true
         sixth_link:
           Value: true
@@ -188,7 +288,7 @@ Visualization Manager:
           Value: true
         tip_link:
           Value: true
-      Marker Scale: 1
+      Marker Scale: 0.5
       Name: TF
       Show Arrows: false
       Show Axes: true
@@ -196,26 +296,53 @@ Visualization Manager:
       Tree:
         base_footprint:
           base_link:
-            camera_link:
-              camera_pan_link:
-                camera_tilt_link:
-                  {}
+            center_rear_steering_link:
+              {}
             first_link:
+              camera_link:
+                camera_pan_link:
+                  camera_tilt_link:
+                    {}
               second_link:
                 third_link:
-                  fourth_link:
-                    fifth_link:
-                      sixth_aux_link:
-                        {}
-                      sixth_link:
-                        seventh_link:
-                          tip_link:
-                            {}
-            front_left_wheel:
-              {}
-            front_right_wheel:
-              {}
+                  fourth_base_link:
+                    fourth_link:
+                      fifth_link:
+                        sixth_link:
+                          seventh_link:
+                            tip_link:
+                              arm_link:
+                                camera_ref_1_link:
+                                  {}
+                                camera_ref_2_link:
+                                  {}
+                                camera_ref_3_link:
+                                  {}
+                                camera_ref_4_link:
+                                  {}
+                                camera_ref_5_link:
+                                  {}
+                                camera_ref_6_link:
+                                  {}
+                              imu_crane_link:
+                                {}
             imu_link:
+              {}
+            left_front_wheel_link:
+              {}
+            left_rear_steering_link:
+              left_rear_wheel_link:
+                {}
+            nav200_laser_link:
+              {}
+            right_front_wheel_link:
+              {}
+            right_rear_steering_link:
+              right_rear_wheel_link:
+                {}
+            sick_front_laser_link:
+              {}
+            sick_rear_laser_link:
               {}
       Update Interval: 0
       Value: true
@@ -243,22 +370,22 @@ Visualization Manager:
   Views:
     Current:
       Class: rviz/XYOrbit
-      Distance: 5.82276
+      Distance: 4.50915
       Enable Stereo Rendering:
         Stereo Eye Separation: 0.06
         Stereo Focal Distance: 1
         Swap Stereo Eyes: false
         Value: false
       Focal Point:
-        X: 2.93375
-        Y: 1.56816
+        X: 3.58214
+        Y: 0.334693
         Z: -2.38419e-07
       Name: Current View
       Near Clip Distance: 0.01
-      Pitch: 0.390399
+      Pitch: 0.910399
       Target Frame: <Fixed Frame>
       Value: XYOrbit (rviz)
-      Yaw: 0.405384
+      Yaw: 6.18857
     Saved: ~
 Window Geometry:
   Displays:
