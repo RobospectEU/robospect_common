@@ -26,6 +26,7 @@ add_message_files(DIRECTORY msg
 	State.msg
 	ControlState.msg
 	MissionCommand.msg
+	MissionPoint.msg
 	MissionState.msg
 	PlatformCommand.msg
 	PlatformState.msg
