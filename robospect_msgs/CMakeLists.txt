@@ -13,6 +13,7 @@ find_package(catkin REQUIRED COMPONENTS
   actionlib
   actionlib_msgs
   nav_msgs
+  geometry_msgs
 )
 
 
@@ -53,6 +54,7 @@ add_service_files(
 generate_messages(
    DEPENDENCIES
    std_msgs # actionlib_msgs Or other packages containing msgs
+   geometry_msgs
 )
 
 catkin_package()
