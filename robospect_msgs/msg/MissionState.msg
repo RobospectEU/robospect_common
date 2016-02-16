@@ -9,7 +9,7 @@ float32 traveled_distance
 float32 step_meters
 float32 minimum_crack_length
 float32 max_cracks
-float32 mission_command
+string mission_command
 MissionPoint[] points
 
 #Vehicle State
