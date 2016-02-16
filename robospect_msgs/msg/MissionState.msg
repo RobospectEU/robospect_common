@@ -10,7 +10,7 @@ float32 step_meters
 float32 minimum_crack_length
 float32 max_cracks
 float32 mission_command
-MissionPoints[] points
+MissionPoint[] points
 
 #Vehicle State
 PlatformState vehicle_state
