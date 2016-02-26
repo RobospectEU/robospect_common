@@ -7,6 +7,7 @@ Panels:
         - /Global Options1
         - /Status1
         - /MotionPlanning1
+        - /TF1/Frames1
       Splitter Ratio: 0.399535
     Tree Height: 365
   - Class: rviz/Help
@@ -77,18 +78,6 @@ Visualization Manager:
             Alpha: 1
             Show Axes: false
             Show Trail: false
-          camera_ref_1_link:
-            Alpha: 1
-            Show Axes: false
-            Show Trail: false
-          camera_ref_2_link:
-            Alpha: 1
-            Show Axes: false
-            Show Trail: false
-          camera_ref_3_link:
-            Alpha: 1
-            Show Axes: false
-            Show Trail: false
           camera_tilt_link:
             Alpha: 1
             Show Axes: false
@@ -116,6 +105,30 @@ Visualization Manager:
             Show Axes: false
             Show Trail: false
             Value: true
+          grasshopper3_left_camera_base_link:
+            Alpha: 1
+            Show Axes: false
+            Show Trail: false
+          grasshopper3_left_camera_lens_link:
+            Alpha: 1
+            Show Axes: false
+            Show Trail: false
+          grasshopper3_left_camera_link:
+            Alpha: 1
+            Show Axes: false
+            Show Trail: false
+          grasshopper3_right_camera_base_link:
+            Alpha: 1
+            Show Axes: false
+            Show Trail: false
+          grasshopper3_right_camera_lens_link:
+            Alpha: 1
+            Show Axes: false
+            Show Trail: false
+          grasshopper3_right_camera_link:
+            Alpha: 1
+            Show Axes: false
+            Show Trail: false
           imu_crane_link:
             Alpha: 1
             Show Axes: false
@@ -193,6 +206,10 @@ Visualization Manager:
             Show Axes: false
             Show Trail: false
             Value: true
+          vision_camera_frame_link:
+            Alpha: 1
+            Show Axes: false
+            Show Trail: false
         Loop Animation: false
         Robot Alpha: 0.5
         Show Robot Collision: false
@@ -259,18 +276,6 @@ Visualization Manager:
             Alpha: 1
             Show Axes: false
             Show Trail: false
-          camera_ref_1_link:
-            Alpha: 1
-            Show Axes: false
-            Show Trail: false
-          camera_ref_2_link:
-            Alpha: 1
-            Show Axes: false
-            Show Trail: false
-          camera_ref_3_link:
-            Alpha: 1
-            Show Axes: false
-            Show Trail: false
           camera_tilt_link:
             Alpha: 1
             Show Axes: false
@@ -298,6 +303,30 @@ Visualization Manager:
             Show Axes: false
             Show Trail: false
             Value: true
+          grasshopper3_left_camera_base_link:
+            Alpha: 1
+            Show Axes: false
+            Show Trail: false
+          grasshopper3_left_camera_lens_link:
+            Alpha: 1
+            Show Axes: false
+            Show Trail: false
+          grasshopper3_left_camera_link:
+            Alpha: 1
+            Show Axes: false
+            Show Trail: false
+          grasshopper3_right_camera_base_link:
+            Alpha: 1
+            Show Axes: false
+            Show Trail: false
+          grasshopper3_right_camera_lens_link:
+            Alpha: 1
+            Show Axes: false
+            Show Trail: false
+          grasshopper3_right_camera_link:
+            Alpha: 1
+            Show Axes: false
+            Show Trail: false
           imu_crane_link:
             Alpha: 1
             Show Axes: false
@@ -375,9 +404,187 @@ Visualization Manager:
             Show Axes: false
             Show Trail: false
             Value: true
+          vision_camera_frame_link:
+            Alpha: 1
+            Show Axes: false
+            Show Trail: false
         Robot Alpha: 0.5
         Show Robot Collision: false
         Show Robot Visual: true
+      Value: true
+    - Class: rviz/InteractiveMarkers
+      Enable Transparency: true
+      Enabled: true
+      Name: InteractiveMarkers
+      Show Axes: false
+      Show Descriptions: true
+      Show Visual Aids: false
+      Update Topic: /mission_waypoints/update
+      Value: true
+    - Class: rviz/TF
+      Enabled: true
+      Frame Timeout: 15
+      Frames:
+        All Enabled: false
+        arm_link:
+          Value: true
+        base_footprint:
+          Value: true
+        base_link:
+          Value: true
+        camera_link:
+          Value: true
+        camera_pan_link:
+          Value: true
+        camera_tilt_link:
+          Value: true
+        center_rear_steering_link:
+          Value: true
+        fifth_link:
+          Value: true
+        first_link:
+          Value: true
+        fourth_base_link:
+          Value: true
+        fourth_link:
+          Value: true
+        grasshopper3_left_camera_base_link:
+          Value: true
+        grasshopper3_left_camera_lens_link:
+          Value: true
+        grasshopper3_left_camera_link:
+          Value: true
+        grasshopper3_right_camera_base_link:
+          Value: true
+        grasshopper3_right_camera_lens_link:
+          Value: true
+        grasshopper3_right_camera_link:
+          Value: true
+        imu_crane_link:
+          Value: true
+        imu_link:
+          Value: true
+        left_front_wheel_link:
+          Value: true
+        left_rear_steering_link:
+          Value: true
+        left_rear_wheel_link:
+          Value: true
+        map:
+          Value: true
+        nav200_laser_link:
+          Value: true
+        odom:
+          Value: true
+        right_front_wheel_link:
+          Value: true
+        right_rear_steering_link:
+          Value: true
+        right_rear_wheel_link:
+          Value: true
+        scanmatcher_frame:
+          Value: true
+        second_link:
+          Value: true
+        seventh_link:
+          Value: true
+        sick_front_laser_link:
+          Value: true
+        sick_rear_laser_link:
+          Value: true
+        sixth_link:
+          Value: true
+        third_link:
+          Value: true
+        tip_link:
+          Value: true
+        vision_camera_frame_link:
+          Value: true
+      Marker Scale: 1
+      Name: TF
+      Show Arrows: true
+      Show Axes: true
+      Show Names: true
+      Tree:
+        map:
+          odom:
+            base_footprint:
+              base_link:
+                center_rear_steering_link:
+                  {}
+                first_link:
+                  camera_link:
+                    camera_pan_link:
+                      camera_tilt_link:
+                        {}
+                  second_link:
+                    third_link:
+                      fourth_base_link:
+                        fourth_link:
+                          fifth_link:
+                            sixth_link:
+                              seventh_link:
+                                tip_link:
+                                  arm_link:
+                                    vision_camera_frame_link:
+                                      grasshopper3_left_camera_base_link:
+                                        grasshopper3_left_camera_link:
+                                          grasshopper3_left_camera_lens_link:
+                                            {}
+                                      grasshopper3_right_camera_base_link:
+                                        grasshopper3_right_camera_link:
+                                          grasshopper3_right_camera_lens_link:
+                                            {}
+                                  imu_crane_link:
+                                    {}
+                imu_link:
+                  {}
+                left_front_wheel_link:
+                  {}
+                left_rear_steering_link:
+                  left_rear_wheel_link:
+                    {}
+                nav200_laser_link:
+                  {}
+                right_front_wheel_link:
+                  {}
+                right_rear_steering_link:
+                  right_rear_wheel_link:
+                    {}
+                sick_front_laser_link:
+                  {}
+                sick_rear_laser_link:
+                  {}
+          scanmatcher_frame:
+            {}
+      Update Interval: 0
+      Value: true
+    - Alpha: 1
+      Class: rviz/PointStamped
+      Color: 204; 41; 204
+      Enabled: true
+      History Length: 1
+      Name: PointStamped
+      Radius: 0.05
+      Topic: /robospect_platform_mission_manager/crack
+      Value: true
+    - Alpha: 1
+      Class: rviz/PointStamped
+      Color: 0; 170; 0
+      Enabled: true
+      History Length: 1
+      Name: PointStamped
+      Radius: 0.05
+      Topic: /robospect_platform_mission_manager/crack_approach_arm
+      Value: true
+    - Alpha: 1
+      Class: rviz/PointStamped
+      Color: 255; 0; 0
+      Enabled: true
+      History Length: 1
+      Name: PointStamped
+      Radius: 0.05
+      Topic: /robospect_platform_mission_manager/crack_approach_crane
       Value: true
   Enabled: true
   Global Options:
@@ -394,22 +601,22 @@ Visualization Manager:
   Views:
     Current:
       Class: rviz/XYOrbit
-      Distance: 8.07196
+      Distance: 8.75687
       Enable Stereo Rendering:
         Stereo Eye Separation: 0.06
         Stereo Focal Distance: 1
         Swap Stereo Eyes: false
         Value: false
       Focal Point:
-        X: 2.69847
-        Y: 1.24531
-        Z: 2.13087e-06
+        X: 3.3378
+        Y: 1.03832
+        Z: 5.23031e-06
       Name: Current View
       Near Clip Distance: 0.01
-      Pitch: 0.304797
+      Pitch: 0.284798
       Target Frame: base_footprint
       Value: XYOrbit (rviz)
-      Yaw: 1.43175
+      Yaw: 5.35995
     Saved: ~
 Window Geometry:
   Displays:
@@ -421,9 +628,9 @@ Window Geometry:
   Hide Right Dock: false
   Motion Planning:
     collapsed: false
-  QMainWindow State: 000000ff00000000fd00000001000000000000035f000003befc0200000005fb000000100044006900730070006c006100790073010000002800000202000000dd00fffffffb0000000800480065006c00700000000342000000bb0000007600fffffffb0000000a0056006900650077007300000003b0000000b0000000b000fffffffb0000000c00430061006d00650072006100000002ff000001610000000000000000fb0000001e004d006f00740069006f006e00200050006c0061006e006e0069006e00670100000230000001b6000001ab00ffffff000003bf000003be00000001000000020000000100000002fc0000000100000002000000010000000a0054006f006f006c00730100000000ffffffff0000000000000000
+  QMainWindow State: 000000ff00000000fd0000000100000000000002b1000003befc0200000005fb000000100044006900730070006c006100790073010000002800000202000000dd00fffffffb0000000800480065006c00700000000342000000bb0000007600fffffffb0000000a0056006900650077007300000003b0000000b0000000b000fffffffb0000000c00430061006d00650072006100000002ff000001610000000000000000fb0000001e004d006f00740069006f006e00200050006c0061006e006e0069006e00670100000230000001b6000001ab00ffffff0000046d000003be00000001000000020000000100000002fc0000000100000002000000010000000a0054006f006f006c00730100000000ffffffff0000000000000000
   Views:
     collapsed: false
   Width: 1828
-  X: 72
+  X: 55
   Y: 14

@@ -14,14 +14,30 @@
         <joint name="crane_second_joint" />
         <joint name="crane_third_joint" />
         <joint name="crane_fourth_joint" />
-        <joint name="crane_fifth_joint" />
         <joint name="crane_sixth_joint" />
-        <joint name="crane_seventh_joint" />
         <joint name="crane_tip_joint" />
         <chain base_link="first_link" tip_link="tip_link" />
     </group>
     <group name="crane_tip">
         <link name="tip_link" />
+    </group>
+    <group name="vehicle_and_crane">
+        <joint name="crane_first_joint" />
+        <joint name="joint_camera_pan" />
+        <joint name="joint_camera_tilt" />
+        <joint name="camera_joint" />
+        <joint name="crane_second_joint" />
+        <joint name="crane_third_joint" />
+        <joint name="crane_fourth_joint" />
+        <joint name="crane_fifth_joint" />
+        <joint name="crane_sixth_joint" />
+        <joint name="crane_seventh_joint" />
+        <joint name="crane_tip_joint" />
+        <joint name="left_front_axle_joint" />
+        <joint name="left_rear_axle_joint" />
+        <joint name="right_front_axle_joint" />
+        <joint name="right_rear_axle_joint" />
+        <joint name="base_footprint_joint" />
     </group>
     <!--END EFFECTOR: Purpose: Represent information about an end effector.-->
     <end_effector name="crane_tip_eef" parent_link="tip_link" group="crane_tip" />

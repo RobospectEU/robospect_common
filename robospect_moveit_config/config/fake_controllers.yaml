@@ -10,3 +10,17 @@ controller_list:
   - name: fake_crane_tip_controller
     joints:
       - crane_tip_joint
+  - name: fake_vehicle_and_crane_controller
+    joints:
+      - crane_first_joint
+      - joint_camera_pan
+      - joint_camera_tilt
+      - crane_second_joint
+      - crane_third_joint
+      - crane_fourth_joint
+      - crane_sixth_joint
+      - crane_tip_joint
+      - left_front_axle_joint
+      - left_rear_axle_joint
+      - right_front_axle_joint
+      - right_rear_axle_joint

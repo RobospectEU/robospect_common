@@ -21,6 +21,8 @@
 
 	<!-- Import all available sensors -->
 	<xacro:include filename="$(find robotnik_sensors)/urdf/all_sensors.urdf.xacro" />
+	
+	<xacro:include filename="$(find robospect_description)/urdf/bases/camera_frame_v1.urdf.xacro" />
 
 	<!-- ***************** -->
 	<!-- Global parameters -->
@@ -97,9 +99,12 @@
 	 <link name="arm_link">
 	 </link>
 	 
+	 <xacro:camera_frame name="vision" parent="arm_link">
+		<origin xyz="-0.403 0.006 0.3535" rpy="0 0 1.5707"/>
+	 </xacro:camera_frame>
 	 
 	<!-- CAMERA REFERENCE FRAMES -->
-    <joint name="camera_ref_1_joint" type="fixed">
+    <!--joint name="camera_ref_1_joint" type="fixed">
 	  <origin xyz="-0.360 -0.13  0.163" rpy="0 0 0"/>
       <parent link="arm_link"/>
       <child link="camera_ref_1_link"/>
@@ -151,7 +156,7 @@
 	 </joint>
   
 	 <link name="camera_ref_6_link">
-	 </link>
+	 </link-->
 	 
 	 <!--xacro:mitsubishi_pa10  parent="arm_link">
 		<origin xyz="0.0 0.0 0.0" rpy="0 0 ${PI/2}"/>

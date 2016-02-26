@@ -42,3 +42,33 @@ joint_limits:
     max_velocity: 0.5
     has_acceleration_limits: false
     max_acceleration: 0
+  joint_camera_pan:
+    has_velocity_limits: true
+    max_velocity: 100
+    has_acceleration_limits: false
+    max_acceleration: 0
+  joint_camera_tilt:
+    has_velocity_limits: true
+    max_velocity: 100
+    has_acceleration_limits: false
+    max_acceleration: 0
+  left_front_axle_joint:
+    has_velocity_limits: true
+    max_velocity: 39.02
+    has_acceleration_limits: false
+    max_acceleration: 0
+  left_rear_axle_joint:
+    has_velocity_limits: true
+    max_velocity: 39.02
+    has_acceleration_limits: false
+    max_acceleration: 0
+  right_front_axle_joint:
+    has_velocity_limits: true
+    max_velocity: 39.02
+    has_acceleration_limits: false
+    max_acceleration: 0
+  right_rear_axle_joint:
+    has_velocity_limits: true
+    max_velocity: 39.02
+    has_acceleration_limits: false
+    max_acceleration: 0
