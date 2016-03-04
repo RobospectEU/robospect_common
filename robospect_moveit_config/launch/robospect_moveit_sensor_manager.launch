@@ -1,4 +1,6 @@
+<?xml version="1.0"?>
 <launch>
 	<param name="octomap_frame" type="string" value="arm_link"/>
-	<rosparam command="load" file="$(find robospect_moveit_config)/config/sensor_hokuyo.yaml">
+	<rosparam command="load" file="$(find robospect_moveit_config)/config/sensor_hokuyo.yaml" />
+	<!--rosparam command="load" file="$(find hector_laserscan_to_pointcloud)/config/default_scan_shadow_filter.yaml" /-->
 </launch>

@@ -129,6 +129,11 @@ Visualization Manager:
             Alpha: 1
             Show Axes: false
             Show Trail: false
+          hokuyo_link:
+            Alpha: 1
+            Show Axes: false
+            Show Trail: false
+            Value: true
           imu_crane_link:
             Alpha: 1
             Show Axes: false
@@ -149,6 +154,46 @@ Visualization Manager:
             Show Axes: false
             Show Trail: false
           left_rear_wheel_link:
+            Alpha: 1
+            Show Axes: false
+            Show Trail: false
+            Value: true
+          link0:
+            Alpha: 1
+            Show Axes: false
+            Show Trail: false
+            Value: true
+          link1:
+            Alpha: 1
+            Show Axes: false
+            Show Trail: false
+            Value: true
+          link2:
+            Alpha: 1
+            Show Axes: false
+            Show Trail: false
+            Value: true
+          link3:
+            Alpha: 1
+            Show Axes: false
+            Show Trail: false
+            Value: true
+          link4:
+            Alpha: 1
+            Show Axes: false
+            Show Trail: false
+            Value: true
+          link5:
+            Alpha: 1
+            Show Axes: false
+            Show Trail: false
+            Value: true
+          link6:
+            Alpha: 1
+            Show Axes: false
+            Show Trail: false
+            Value: true
+          link7:
             Alpha: 1
             Show Axes: false
             Show Trail: false
@@ -228,9 +273,9 @@ Visualization Manager:
         Colliding Link Color: 255; 0; 0
         Goal State Alpha: 1
         Goal State Color: 250; 128; 0
-        Interactive Marker Size: 0
+        Interactive Marker Size: 0.2
         Joint Violation Color: 255; 0; 255
-        Planning Group: crane_arm
+        Planning Group: pa10
         Query Goal State: true
         Query Start State: false
         Show Workspace: false
@@ -327,6 +372,11 @@ Visualization Manager:
             Alpha: 1
             Show Axes: false
             Show Trail: false
+          hokuyo_link:
+            Alpha: 1
+            Show Axes: false
+            Show Trail: false
+            Value: true
           imu_crane_link:
             Alpha: 1
             Show Axes: false
@@ -347,6 +397,46 @@ Visualization Manager:
             Show Axes: false
             Show Trail: false
           left_rear_wheel_link:
+            Alpha: 1
+            Show Axes: false
+            Show Trail: false
+            Value: true
+          link0:
+            Alpha: 1
+            Show Axes: false
+            Show Trail: false
+            Value: true
+          link1:
+            Alpha: 1
+            Show Axes: false
+            Show Trail: false
+            Value: true
+          link2:
+            Alpha: 1
+            Show Axes: false
+            Show Trail: false
+            Value: true
+          link3:
+            Alpha: 1
+            Show Axes: false
+            Show Trail: false
+            Value: true
+          link4:
+            Alpha: 1
+            Show Axes: false
+            Show Trail: false
+            Value: true
+          link5:
+            Alpha: 1
+            Show Axes: false
+            Show Trail: false
+            Value: true
+          link6:
+            Alpha: 1
+            Show Axes: false
+            Show Trail: false
+            Value: true
+          link7:
             Alpha: 1
             Show Axes: false
             Show Trail: false
@@ -460,6 +550,8 @@ Visualization Manager:
           Value: true
         grasshopper3_right_camera_link:
           Value: true
+        hokuyo_link:
+          Value: true
         imu_crane_link:
           Value: true
         imu_link:
@@ -470,7 +562,21 @@ Visualization Manager:
           Value: true
         left_rear_wheel_link:
           Value: true
-        map:
+        link0:
+          Value: true
+        link1:
+          Value: true
+        link2:
+          Value: true
+        link3:
+          Value: true
+        link4:
+          Value: true
+        link5:
+          Value: true
+        link6:
+          Value: true
+        link7:
           Value: true
         nav200_laser_link:
           Value: true
@@ -481,8 +587,6 @@ Visualization Manager:
         right_rear_steering_link:
           Value: true
         right_rear_wheel_link:
-          Value: true
-        scanmatcher_frame:
           Value: true
         second_link:
           Value: true
@@ -506,57 +610,65 @@ Visualization Manager:
       Show Axes: true
       Show Names: true
       Tree:
-        map:
-          odom:
-            base_footprint:
-              base_link:
-                center_rear_steering_link:
+        odom:
+          base_footprint:
+            base_link:
+              center_rear_steering_link:
+                {}
+              first_link:
+                camera_link:
+                  camera_pan_link:
+                    camera_tilt_link:
+                      {}
+                second_link:
+                  third_link:
+                    fourth_base_link:
+                      fourth_link:
+                        fifth_link:
+                          sixth_link:
+                            seventh_link:
+                              tip_link:
+                                arm_link:
+                                  link0:
+                                    link1:
+                                      link2:
+                                        link3:
+                                          link4:
+                                            link5:
+                                              hokuyo_link:
+                                                {}
+                                              link6:
+                                                link7:
+                                                  {}
+                                  vision_camera_frame_link:
+                                    grasshopper3_left_camera_base_link:
+                                      grasshopper3_left_camera_link:
+                                        grasshopper3_left_camera_lens_link:
+                                          {}
+                                    grasshopper3_right_camera_base_link:
+                                      grasshopper3_right_camera_link:
+                                        grasshopper3_right_camera_lens_link:
+                                          {}
+                                imu_crane_link:
+                                  {}
+              imu_link:
+                {}
+              left_front_wheel_link:
+                {}
+              left_rear_steering_link:
+                left_rear_wheel_link:
                   {}
-                first_link:
-                  camera_link:
-                    camera_pan_link:
-                      camera_tilt_link:
-                        {}
-                  second_link:
-                    third_link:
-                      fourth_base_link:
-                        fourth_link:
-                          fifth_link:
-                            sixth_link:
-                              seventh_link:
-                                tip_link:
-                                  arm_link:
-                                    vision_camera_frame_link:
-                                      grasshopper3_left_camera_base_link:
-                                        grasshopper3_left_camera_link:
-                                          grasshopper3_left_camera_lens_link:
-                                            {}
-                                      grasshopper3_right_camera_base_link:
-                                        grasshopper3_right_camera_link:
-                                          grasshopper3_right_camera_lens_link:
-                                            {}
-                                  imu_crane_link:
-                                    {}
-                imu_link:
+              nav200_laser_link:
+                {}
+              right_front_wheel_link:
+                {}
+              right_rear_steering_link:
+                right_rear_wheel_link:
                   {}
-                left_front_wheel_link:
-                  {}
-                left_rear_steering_link:
-                  left_rear_wheel_link:
-                    {}
-                nav200_laser_link:
-                  {}
-                right_front_wheel_link:
-                  {}
-                right_rear_steering_link:
-                  right_rear_wheel_link:
-                    {}
-                sick_front_laser_link:
-                  {}
-                sick_rear_laser_link:
-                  {}
-          scanmatcher_frame:
-            {}
+              sick_front_laser_link:
+                {}
+              sick_rear_laser_link:
+                {}
       Update Interval: 0
       Value: true
     - Alpha: 1
@@ -613,10 +725,10 @@ Visualization Manager:
         Z: 5.23031e-06
       Name: Current View
       Near Clip Distance: 0.01
-      Pitch: 0.284798
+      Pitch: 0.469798
       Target Frame: base_footprint
       Value: XYOrbit (rviz)
-      Yaw: 5.35995
+      Yaw: 4.74495
     Saved: ~
 Window Geometry:
   Displays:
