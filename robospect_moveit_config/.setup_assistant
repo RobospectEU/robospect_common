@@ -5,4 +5,4 @@ moveit_setup_assistant_config:
   SRDF:
     relative_path: config/robospect.srdf
   CONFIG:
-    generated_timestamp: 1457090830
+    generated_timestamp: 1457098001

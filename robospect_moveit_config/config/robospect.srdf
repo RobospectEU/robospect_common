@@ -185,6 +185,7 @@
     <disable_collisions link1="fourth_link" link2="hokuyo_link" reason="Never" />
     <disable_collisions link1="fourth_link" link2="imu_crane_link" reason="Never" />
     <disable_collisions link1="fourth_link" link2="imu_link" reason="Never" />
+    <disable_collisions link1="fourth_link" link2="left_front_wheel_link" reason="User" />
     <disable_collisions link1="fourth_link" link2="left_rear_wheel_link" reason="Never" />
     <disable_collisions link1="fourth_link" link2="link0" reason="Never" />
     <disable_collisions link1="fourth_link" link2="link1" reason="Never" />
@@ -194,9 +195,11 @@
     <disable_collisions link1="fourth_link" link2="link5" reason="Never" />
     <disable_collisions link1="fourth_link" link2="link6" reason="Never" />
     <disable_collisions link1="fourth_link" link2="link7" reason="Never" />
+    <disable_collisions link1="fourth_link" link2="right_front_wheel_link" reason="User" />
     <disable_collisions link1="fourth_link" link2="right_rear_wheel_link" reason="Never" />
     <disable_collisions link1="fourth_link" link2="second_link" reason="Never" />
     <disable_collisions link1="fourth_link" link2="seventh_link" reason="Never" />
+    <disable_collisions link1="fourth_link" link2="sick_front_laser_link" reason="User" />
     <disable_collisions link1="fourth_link" link2="sick_rear_laser_link" reason="Never" />
     <disable_collisions link1="fourth_link" link2="sixth_link" reason="Never" />
     <disable_collisions link1="fourth_link" link2="third_link" reason="Adjacent" />
