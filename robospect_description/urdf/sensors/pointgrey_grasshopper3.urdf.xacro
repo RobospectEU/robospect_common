@@ -1,0 +1,42 @@
+<?xml version="1.0"?>
+<robot name="robospect" xmlns:xacro="http://www.ros.org/wiki/xacro">
+
+
+	<xacro:macro name="pointgrey_grasshopper3" params="name parent *origin">
+
+	<!-- CAMERA BASE_LINK -->
+	<link name="${name}_camera_base_link">
+
+	</link>
+  
+	<joint name="${name}_camera_base_joint" type="fixed">
+	  <insert_block name="origin" />
+	  <parent link="${parent}"/>
+	  <child link="${name}_camera_base_link"/>
+	</joint>
+	
+	
+	<link name="${name}_camera_link">
+
+	</link>
+  
+	<joint name="${name}_camera_joint" type="fixed">
+	  <origin xyz="0.02875 0 0.0145" rpy="0 -1.5707 0" /> 
+	  <parent link="${name}_camera_base_link"/>
+	  <child link="${name}_camera_link"/>
+	</joint>
+
+	<link name="${name}_camera_lens_link">
+
+	</link>
+  
+	<joint name="${name}_camera_lens_joint" type="fixed">
+	  <origin xyz="0.0 0 0.0" rpy="0 0 -1.5707" /> 
+	  <parent link="${name}_camera_link"/>
+	  <child link="${name}_camera_lens_link"/>
+	</joint>
+
+	
+
+  </xacro:macro>
+</robot>
