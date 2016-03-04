@@ -24,3 +24,15 @@ controller_list:
       - left_rear_axle_joint
       - right_front_axle_joint
       - right_rear_axle_joint
+  - name: fake_pa10_controller
+    joints:
+      - S1
+      - S2
+      - S3
+      - E1
+      - E2
+      - W1
+      - W2
+  - name: fake_pa10_tip_controller
+    joints:
+      - W2
