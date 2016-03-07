@@ -2,6 +2,7 @@
 <robot name="robospect" xmlns:xacro="http://www.ros.org/wiki/xacro">
 	
    	<xacro:include filename="$(find robospect_description)/urdf/sensors/pointgrey_grasshopper3.urdf.xacro" />
+   	<xacro:include filename="$(find robospect_description)/urdf/bases/camera_frame_top_v1.urdf.xacro" />
 
 	<xacro:macro name="camera_frame" params="name parent *origin">
 
@@ -16,14 +17,18 @@
 		  <child link="${name}_camera_frame_link"/>
 		</joint>
 		
-		<xacro:pointgrey_grasshopper3 name="grasshopper3_left" parent="${name}_camera_frame_link">
+		<xacro:pointgrey_grasshopper3 name="grasshopper3_bottom_left" parent="${name}_camera_frame_link">
 			<origin xyz="-0.032 0.059 0.018" rpy="0 0 -0.1308" />
 		</xacro:pointgrey_grasshopper3>
 		
-		<xacro:pointgrey_grasshopper3 name="grasshopper3_right" parent="${name}_camera_frame_link">
+		<xacro:pointgrey_grasshopper3 name="grasshopper3_bottom_right" parent="${name}_camera_frame_link">
 			<origin xyz="-0.035 -0.062 0.018" rpy="0.0 0.0 -0.026" />
 		</xacro:pointgrey_grasshopper3>
 
-
+		<!-- top frame of cameras -->
+		<xacro:camera_frame_top name="${name}_top" parent="${name}_camera_frame_link">
+			<origin xyz="-0.010 0.002 0.0745" rpy="0.0 0.0 0.017453" />
+		</xacro:camera_frame_top>
+		
 	</xacro:macro>
 </robot>
