@@ -38,6 +38,14 @@
         <joint name="right_front_axle_joint" />
         <joint name="right_rear_axle_joint" />
         <joint name="base_footprint_joint" />
+        <joint name="S0" />
+        <joint name="S1" />
+        <joint name="S2" />
+        <joint name="S3" />
+        <joint name="E1" />
+        <joint name="E2" />
+        <joint name="W1" />
+        <joint name="W2" />
     </group>
     <group name="pa10">
         <joint name="S1" />
