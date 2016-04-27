@@ -1,0 +1,147 @@
+<?xml version="1.0"?>
+<robot name="robospect" xmlns:xacro="http://www.ros.org/wiki/xacro">
+	
+  <xacro:property name="PI" value="3.141592"/>
+
+  <xacro:property name="PanTilt_b_lower_limit" value="-0.78"/>
+  <xacro:property name="PanTilt_b_upper_limit" value="3.927"/>	
+  <xacro:property name="PanTilt_c_lower_limit" value="-3.14159"/>
+  <xacro:property name="PanTilt_c_upper_limit" value="3.14159"/>	
+		
+	
+  <xacro:macro name="robospect_ptu" params="parent *origin">
+
+  <!-- PanTilt_a JOINT-->
+
+    <joint name="PanTilt_a_joint" type="fixed">
+      <axis xyz="0 0 1"/>
+      <insert_block name="origin" />
+      <parent link="${parent}"/>
+      <child link="PanTilt_a_link"/>
+    </joint>
+
+
+  <!-- PanTilt_a LINK-->
+
+  <link name="PanTilt_a_link">
+    <inertial>
+      <mass value="1.0" />
+      <origin xyz="0 0 0" />
+      <inertia  ixx="1.391" ixy="0.004"  ixz="0.0"  iyy="6.853"  iyz="0.0"  izz="6.125" />
+    </inertial>
+    <visual>
+       <origin xyz="0 0 0" rpy="0 0 0" />
+       <geometry>
+	        <mesh filename="package://robospect_description/meshes/bases/PanTilt_a.dae" scale="1 1 1"/>
+       </geometry>
+       <material name="grey">
+          <color rgba="0.8 0.8 0.8 1"/>
+       </material>
+    </visual>
+    <collision>
+       <origin xyz="0 0 0" rpy="0 0 0 " />
+       <geometry>
+         <mesh filename="package://robospect_description/meshes/bases/PanTilt_a.dae" scale="1 1 1"/>
+       </geometry>
+    </collision>
+  </link>
+
+  <gazebo reference="PanTilt_a_link">
+    <material>Gazebo/White</material>
+  </gazebo>
+
+  <!-- PanTilt_b JOINT-->
+
+    <joint name="pan_joint" type="revolute">
+      <axis xyz="0 0 1"/>
+      <limit effort="1000.0" lower="${PanTilt_b_lower_limit}" upper="${PanTilt_b_upper_limit}" velocity="0.5"/>
+      <origin xyz="0 0 0.263" rpy="0 0 ${PI/2.0}"/>
+      <parent link="PanTilt_a_link"/>
+      <child link="pan_link"/>
+    </joint>
+
+    <transmission name="PanTilt_b_joint_trans">
+      <type>transmission_interface/SimpleTransmission</type>
+      <joint name="pan_joint">
+        <hardwareInterface>EffortJointInterface</hardwareInterface>
+      </joint>
+      <actuator name="pan_joint_act">
+        <hardwareInterface>EffortJointInterface</hardwareInterface>
+        <mechanicalReduction>1</mechanicalReduction>
+      </actuator>
+    </transmission>
+
+  <!-- PanTilt_b LINK-->
+
+  <link name="pan_link">
+    <inertial>
+      <mass value="1.0" />
+      <origin xyz="0 0 0" />
+      <inertia  ixx="1.391" ixy="0.004"  ixz="0.0"  iyy="6.853"  iyz="0.0"  izz="6.125" />
+    </inertial>
+    <visual>
+       <origin xyz="0 0 0" rpy="0 0 0" />
+       <geometry>
+	        <mesh filename="package://robospect_description/meshes/bases/PanTilt_b.dae" scale="1 1 1"/>
+       </geometry>
+       <material name="grey">
+          <color rgba="0.8 0.8 0.8 1"/>
+       </material>
+    </visual>
+    <collision>
+       <origin xyz="0 0 0" rpy="0 0 0 " />
+       <geometry>
+         <mesh filename="package://robospect_description/meshes/bases/PanTilt_b.dae" scale="1 1 1"/>
+       </geometry>
+    </collision>
+  </link>
+
+  
+  <!-- PanTilt_c JOINT-->
+
+    <joint name="tilt_joint" type="revolute">
+      <axis xyz="0 1 0"/>
+      <limit effort="1000.0" lower="${PanTilt_c_lower_limit}" upper="${PanTilt_c_upper_limit}" velocity="0.5"/>
+      <origin xyz="0 0 0" rpy="0 0 0"/>
+      <parent link="pan_link"/>
+      <child link="tilt_link"/>
+    </joint>
+
+    <transmission name="tilt_joint_trans">
+      <type>transmission_interface/SimpleTransmission</type>
+      <joint name="tilt_joint">
+        <hardwareInterface>EffortJointInterface</hardwareInterface>
+      </joint>
+      <actuator name="tilt_joint_act">
+        <hardwareInterface>EffortJointInterface</hardwareInterface>
+        <mechanicalReduction>1</mechanicalReduction>
+      </actuator>
+    </transmission>
+
+  <!-- PanTilt_c LINK-->
+
+	  <link name="tilt_link">
+		<inertial>
+		  <mass value="1.0" />
+		  <origin xyz="0 0 0" />
+		  <inertia  ixx="1.391" ixy="0.004"  ixz="0.0"  iyy="6.853"  iyz="0.0"  izz="6.125" />
+		</inertial>
+		<visual>
+		   <origin xyz="0 0 0" rpy="0 0 0" />
+		   <geometry>
+				<mesh filename="package://robospect_description/meshes/bases/PanTilt_c.dae" scale="1 1 1"/>
+		   </geometry>
+		   <material name="grey">
+			  <color rgba="0.8 0.8 0.8 1"/>
+		   </material>
+		</visual>
+		<collision>
+		   <origin xyz="0 0 0" rpy="0 0 0 " />
+		   <geometry>
+			 <mesh filename="package://robospect_description/meshes/bases/PanTilt_c.dae" scale="1 1 1"/>
+		   </geometry>
+		</collision>
+	  </link>
+
+	</xacro:macro>
+</robot>
