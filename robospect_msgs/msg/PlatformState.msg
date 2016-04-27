@@ -4,7 +4,7 @@
 float32 vehicle_x
 float32 vehicle_y
 float32 vehicle_theta
-# Vehicle velocities
+#Vehicle velocities
 float32 vehicle_linear_speed
 float32 vehicle_angular_speed
 
