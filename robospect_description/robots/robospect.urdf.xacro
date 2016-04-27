@@ -18,6 +18,9 @@
 
 	<!-- Import Robospect Wheels -->
 	<xacro:include filename="$(find robospect_description)/urdf/wheels/standard_wheel.urdf.xacro" />
+	
+	<!-- Import Robospect PTU -->
+	<xacro:include filename="$(find robospect_description)/urdf/bases/ptu_frame_v1.urdf.xacro" />
 
 	<!-- Import all available sensors -->
 	<xacro:include filename="$(find robotnik_sensors)/urdf/all_sensors.urdf.xacro" />
@@ -162,6 +165,12 @@
 		<origin xyz="0.0 0.0 0.0" rpy="0 0 0"/>
 	</xacro:mitsubishi_pa10>
 
+
+
+	<!-- Robospect_ptu -->
+	<xacro:robospect_ptu parent="arm_link">
+		<origin xyz="-0.45335 0 0.158" rpy="0 0 0"/>
+	</xacro:robospect_ptu>
 	
 <!--
 	<xacro:sensor_asus_xtion_pro name="xtion_pro" parent="base_link">

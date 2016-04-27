@@ -4,7 +4,7 @@
 float32 vehicle_x
 float32 vehicle_y
 float32 vehicle_theta
-# Vehicle velocities
+#Vehicle velocities
 float32 vehicle_linear_speed
 float32 vehicle_angular_speed
 
@@ -19,6 +19,10 @@ float32 crane_q4
 
 #Crane joints
 float32[] crane_joints
+
+#Pan&Tilt Angles
+float32 pan_angle
+float32 tilt_angle
 
 #Vehicle battery level
 float32 battery_level
