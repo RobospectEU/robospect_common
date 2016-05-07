@@ -1,0 +1,48 @@
+<?xml version="1.0"?>
+<robot name="robospect" xmlns:xacro="http://www.ros.org/wiki/xacro">
+	
+   	<xacro:include filename="$(find robospect_description)/urdf/sensors/pointgrey_grasshopper3.urdf.xacro" />
+   	<!--xacro:include filename="$(find robospect_description)/urdf/bases/camera_frame_top_v1.urdf.xacro" /-->
+
+	<xacro:macro name="camera_frame" params="name parent *origin">
+
+		<!-- CAMERA FRAME BASE_LINK -->
+		<link name="${name}_camera_frame_link">
+
+		</link>
+	  
+		<joint name="${name}_camera_frame_joint" type="fixed">
+		  <insert_block name="origin" />
+		  <parent link="${parent}"/>
+		  <child link="${name}_camera_frame_link"/>
+		</joint>
+		
+		<xacro:pointgrey_grasshopper3 name="grasshopper3_bottom_left" parent="${name}_camera_frame_link">
+			<origin xyz="-0.04 0.04 -0.0543" rpy="0 0 0" />
+		</xacro:pointgrey_grasshopper3>
+		
+		<xacro:pointgrey_grasshopper3 name="grasshopper3_bottom_right" parent="${name}_camera_frame_link">
+			<origin xyz="-0.04 -0.04 -0.0543" rpy="0.0 0.0 0.0872665" />
+		</xacro:pointgrey_grasshopper3>
+		
+		<xacro:pointgrey_grasshopper3 name="grasshopper3_top_left" parent="${name}_camera_frame_link">
+			<origin xyz="-0.04 0.04 0.0247" rpy="0 0 0" />
+		</xacro:pointgrey_grasshopper3>
+		
+		<xacro:pointgrey_grasshopper3 name="grasshopper3_top_right" parent="${name}_camera_frame_link">
+			<origin xyz="-0.04 -0.04 0.0247" rpy="0.0 0.0 0.0872665" />
+		</xacro:pointgrey_grasshopper3>
+
+		<link name="test_camera_link">
+
+		</link>
+	  
+		<joint name="test_camera_joint" type="fixed">
+		  <origin xyz="0.0 0 -0.079" rpy="0 0 0" /> 
+		  <parent link="${name}_camera_frame_link"/>
+		  <child link="test_camera_link"/>
+		</joint>
+	
+		
+	</xacro:macro>
+</robot>
