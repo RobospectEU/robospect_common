@@ -100,7 +100,7 @@
   <!-- PanTilt_c JOINT-->
 
     <joint name="tilt_joint" type="revolute">
-      <axis xyz="0 1 0"/>
+      <axis xyz="0 -1 0"/>
       <limit effort="1000.0" lower="${PanTilt_c_lower_limit}" upper="${PanTilt_c_upper_limit}" velocity="0.5"/>
       <origin xyz="0 0 0" rpy="0 0 0"/>
       <parent link="pan_link"/>
@@ -142,6 +142,19 @@
 		   </geometry>
 		</collision>
 	  </link>
+	  
+	  <!-- p-->
 
+    <joint name="pantilt_fixed_joint" type="fixed">
+      <axis xyz="0 0 1"/>
+      <origin xyz="0 0 0.263" rpy="0 0 0"/>
+      <parent link="PanTilt_a_link"/>
+      <child link="pantilt_fixed_link"/>
+    </joint>
+
+	<!-- PanTilt_b LINK-->
+	<link name="pantilt_fixed_link">
+	</link>
+	
 	</xacro:macro>
 </robot>

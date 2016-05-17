@@ -476,11 +476,13 @@ void RobospectPad::ControlLoop(){
 					joint_index += 1;
 					if(joint_index >= joint_vector_length)
 						joint_index = joint_vector_length -1;
+					ROS_INFO("robospect_pad: joint up: %d", joint_index);
 				}
 				if(vButtons[button_joint_down_].IsReleased()){
 					joint_index -= 1;
 					if(joint_index < 0)
 						joint_index = 0;
+					ROS_INFO("robospect_pad: joint down: %d", joint_index);
 				}
 				
 
