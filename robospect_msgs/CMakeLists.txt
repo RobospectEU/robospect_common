@@ -32,6 +32,7 @@ add_message_files(DIRECTORY msg
 	PlatformCommand.msg
 	PlatformState.msg
 	PlatformResponse.msg
+	PadStatus.msg
 )
 
 ## Generate services in the 'srv' folder

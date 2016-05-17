@@ -1,0 +1,10 @@
+string platform_mode
+bool deadman_active
+float32 vehicle_speed_level
+float32 desired_angular_position
+float32 desired_linear_speed
+
+bool arm_deadman_active
+string current_joint
+float32 arm_speed_level
+float32 current_joint_speed
