@@ -38,6 +38,7 @@
 #include <unistd.h>
 #include <vector>
 #include <robotnik_msgs/enable_disable.h>
+#include <robotnik_msgs/ptz.h>
 #include "diagnostic_msgs/DiagnosticStatus.h"
 #include "diagnostic_updater/diagnostic_updater.h"
 #include "diagnostic_updater/update_functions.h"
@@ -50,12 +51,15 @@
 
 #include <sensor_msgs/JointState.h>
 #include <robospect_msgs/SetControlMode.h>
+#include <robospect_msgs/PadStatus.h>
+#include <robospect_msgs/State.h>
+
 
 
 #define DEFAULT_MAX_LINEAR_SPEED	    3.0 //m/s
 #define DEFAULT_MAX_ANGULAR_POSITION	0.5 // rads/s
 
-#define DEFAULT_MAX_LINEAR_ARM_SPEED	    3.0 //m/s
+#define DEFAULT_MAX_LINEAR_ARM_SPEED	 3.0 //m/s
 #define DEFAULT_MAX_ANGULAR_ARM_SPEED	 0.5 // rads/s
 
 #define MAX_NUM_OF_BUTTONS			16
@@ -71,11 +75,13 @@
 #define DEFAULT_SCALE_LINEAR		1.0
 #define DEFAULT_SCALE_ANGULAR		1.0
 
-#define DEFAULT_JOY			"/joy"
-#define DEFAULT_HZ			50.0
+#define DEFAULT_JOY					"/joy"
+#define DEFAULT_HZ					50.0
 
-#define NUMBER_OF_DRIVEN_JOINTS   7//
+#define NUMBER_OF_DRIVEN_JOINTS   	7//
 
+#define DEFAULT_PANTILT_INC			1.0
+#define DEFAULT_ZOOM_INC			200.0
 
 //! Class to save the state of the buttons
 class Button{
@@ -122,6 +128,7 @@ public:
 private:
 
 	void joyCallback(const sensor_msgs::Joy::ConstPtr& joy);
+	void controllerStateCallback(const robospect_msgs::State::ConstPtr& state);
 
 	char * StateToString(int state);
 	int SwitchToState(int new_state);
@@ -142,28 +149,44 @@ private:
 	//! Set the max speed sent to the robot
 	double max_linear_speed_, max_angular_position_;
 	double max_linear_arm_speed_, max_angular_arm_speed_;
+	double desired_linear_arm_speed, desired_angular_arm_speed, desired_angular_position, desired_linear_speed;
 	//! Desired component's freq
 	double desired_freq_;
 	//joint index number
 	int joint_index;
+	
+	robospect_msgs::SetControlMode srv;
+	robospect_msgs::State controller_state_msg;
+
+	bool control_crane_enabled;
 
 	// TOPICS
-	//! It will publish into command velocity (for the robot)
-	ros::Publisher vel_pub_;
+	// subscribers
 	//! they will be suscribed to the joysticks
 	ros::Subscriber joy_sub_;
+	ros::Subscriber controller_state_sub_;
+	// publishers
+	//! It will publish into command velocity (for the robot)
+	ros::Publisher vel_pub_;
+	//! Topic to publish the state
+	ros::Publisher state_pub_;
+	//! Publisher of the arm joint_state
+	ros::Publisher joint_pub_;
+	//! Publisher of the ptz camera
+	ros::Publisher ptz_pub_;
+	
+	//! Name of the joint controller topic
+	std::string  joint_state_topic;
+	//! Controller state topic name
+	std::string  controller_state_topic;
+	//! PTZ camera control topic name
+	std::string  ptz_camera_topic_;
 	//! // Name of the joystick's topic
 	std::string  joy_topic_;
 	//! Name of the topic where it will be publishing the velocity
 	std::string cmd_topic_vel;
 	//! topic name for the state
 	std::string topic_state_;
-	//! Topic to publish the state
-	ros::Publisher state_pub_;
-	//! Publisher of the arm joint_state
-	ros::Publisher joint_pub_;
-	//! Name of the joint controller topic
-	std::string  joint_state_topic;
 
 	// SERVICES
 	//! Service clients
@@ -186,15 +209,22 @@ private:
 	int button_dead_man_;
 	//! Number of the ARM DEADMAN button
 	int button_arm_dead_man_;
+	//! Number of the deadman button to set the zoom
+	int button_zoom_dead_man_;
 	//! Number of the button for increase or decrease the speed max of the joystick
 	int button_speed_up_, button_speed_down_;
 	//! Number of the button for increase or decrease the number of the joint selected
 	int button_joint_up_, button_joint_down_;
 	//! Number of the button to set the control mode in velocity
-	int button_control_mode_;
-
+	int button_control_mode_velocity_;
+	//! Number of the button to set the control mode in velocity
+	int button_control_mode_position_;
+	//! Degrees of the pan & tilt icreased
+	double pantilt_inc_;
+	//! zoom increased
+	double zoom_inc_;
 	//! buttons to the pan-tilt camera
-	int ptz_tilt_up_, ptz_tilt_down_, ptz_pan_right_, ptz_pan_left_;
+	int ptz_tilt_up_, ptz_tilt_down_, ptz_pan_right_, ptz_pan_left_, ptz_zoom_in_, ptz_zoom_out_;
 	//! Name of the service to move ptz
 	std::string cmd_service_ptz_;
 	
@@ -250,11 +280,14 @@ RobospectPad::RobospectPad():
 	// MOTION CONF
 	pnh_.param("cmd_topic_vel", cmd_topic_vel, std::string("/robospect_robot_control/command"));
 	pnh_.param("joint_state_topic", joint_state_topic, std::string ("/robospect_platform_controller/command"));
+	pnh_.param("controller_state_topic", controller_state_topic, std::string ("/robospect_platform_controller/state"));
+	pnh_.param("ptz_camera_topic", ptz_camera_topic_, std::string ("/axis_v2/ptz_command"));
 
 	pnh_.param("button_arm_dead_man", button_arm_dead_man_, button_arm_dead_man_);
 	pnh_.param("button_joint_up", button_joint_up_, button_joint_up_);
 	pnh_.param("button_joint_down", button_joint_down_, button_joint_down_);
-	pnh_.param("button_control_mode", button_control_mode_, 0);
+	pnh_.param("button_control_mode_position", button_control_mode_position_, 0);
+	pnh_.param("button_control_mode_velocity", button_control_mode_velocity_, 0);
 
 	pnh_.param("button_dead_man", button_dead_man_, button_dead_man_);
 	pnh_.param("button_speed_up", button_speed_up_, button_speed_up_);
@@ -265,6 +298,7 @@ RobospectPad::RobospectPad():
 	pnh_.param("max_linear_speed_", max_linear_arm_speed_, DEFAULT_MAX_LINEAR_ARM_SPEED);
 	pnh_.param("axis_linear_speed", axis_linear_speed_, DEFAULT_AXIS_LINEAR_X);
 	pnh_.param("axis_angular_position", axis_angular_position_, DEFAULT_AXIS_ANGULAR);
+	
 	ROS_INFO("axis_linear_speed_ = %d, axis_angular = %d", axis_linear_speed_, axis_angular_position_);
 	ROS_INFO("max_linear_speed = %lf, max_angular_speed = %lf", max_linear_speed_, max_angular_position_);
 
@@ -274,10 +308,15 @@ RobospectPad::RobospectPad():
 
 	// PANTILT CONF
 	pnh_.param("cmd_service_ptz", cmd_service_ptz_, cmd_service_ptz_);
+	pnh_.param("button_zoom_dead_man", button_zoom_dead_man_, button_zoom_dead_man_);
 	pnh_.param("button_ptz_tilt_up", ptz_tilt_up_, ptz_tilt_up_);
 	pnh_.param("button_ptz_tilt_down", ptz_tilt_down_, ptz_tilt_down_);
 	pnh_.param("button_ptz_pan_right", ptz_pan_right_, ptz_pan_right_);
 	pnh_.param("button_ptz_pan_left", ptz_pan_left_, ptz_pan_left_);
+	pnh_.param("button_ptz_zoom_in", ptz_zoom_in_, ptz_zoom_in_);
+	pnh_.param("button_ptz_zoom_out", ptz_zoom_out_, ptz_zoom_out_);
+	pnh_.param("pantilt_inc", pantilt_inc_, DEFAULT_PANTILT_INC);
+	pnh_.param("zoom_inc", zoom_inc_, DEFAULT_ZOOM_INC);
 
 	// CRANE JOINT names
 	pnh_.param("Joints_vector_length", joint_vector_length, 6);
@@ -303,13 +342,15 @@ RobospectPad::RobospectPad():
 		fAxes.push_back(0.0);
 	}
 
-
+	// Publishers
 	this->vel_pub_ = nh_.advertise<ackermann_msgs::AckermannDriveStamped>(this->cmd_topic_vel, 1);
-
 	this->joint_pub_ = nh_.advertise<sensor_msgs::JointState>(this->joint_state_topic, 1);
+	this->state_pub_ = nh_.advertise<robospect_msgs::PadStatus>(this->topic_state_, 1);
+	this->ptz_pub_ = nh_.advertise<robotnik_msgs::ptz>(this->ptz_camera_topic_, 1);
 
  	// Listen through the node handle sensor_msgs::Joy messages from joystick
 	joy_sub_ = nh_.subscribe<sensor_msgs::Joy>(joy_topic_, 1, &RobospectPad::joyCallback, this);
+	controller_state_sub_ = nh_.subscribe<robospect_msgs::State>(controller_state_topic, 1, &RobospectPad::controllerStateCallback, this);
 
  	// Request service to activate / deactivate digital I/O
 	set_control_mode_srv_ = nh_.serviceClient<robospect_msgs::SetControlMode>(set_control_mode_service_name_);
@@ -329,7 +370,7 @@ RobospectPad::RobospectPad():
 	enable_disable_srv_ = pnh_.advertiseService("enable_disable",  &RobospectPad::EnableDisable, this);
 	//
 	bEnable = true;	// Communication flag enabled by default
-
+	control_crane_enabled = false;
     // Info message
     // ROS_INFO("A segfault after this line is usually caused either by bad definition of the pad yaml file or by incrorrect setting of the jsX device in the launch file");
 }
@@ -345,15 +386,21 @@ void RobospectPad::Update(){
 
 //!
 void RobospectPad::PublishState(){
-	/*RobospectPad::rescuer_pad_state pad_state;
+	robospect_msgs::PadStatus pad_state;
 
-	pad_state.state = StateToString(iState);
-	pad_state.arm_mode = ModeToString(iArmMode);
-	pad_state.platform_mode = ModeToString(iPlatformMode);
-	pad_state.speed_level = current_speed_lvl;
+	pad_state.platform_mode = controller_state_msg.control_mode;
+	
 	pad_state.deadman_active = (bool) vButtons[button_dead_man_].IsPressed();
+	pad_state.vehicle_speed_level = current_speed_lvl;
+	pad_state.desired_angular_position = desired_angular_position;
+	pad_state.desired_linear_speed = desired_linear_speed;
+	
+	pad_state.arm_deadman_active = (bool) vButtons[button_arm_dead_man_].IsPressed();
+	pad_state.current_joint = JointNames[joint_index];
+	pad_state.arm_speed_level = current_arm_speed_lvl;
+	pad_state.current_joint_speed = desired_linear_arm_speed;
 
-	state_pub_.publish(pad_state);*/
+	state_pub_.publish(pad_state);
 }
 
 /*
@@ -382,13 +429,27 @@ void RobospectPad::joyCallback(const sensor_msgs::Joy::ConstPtr& joy)
 	//ROS_INFO("RobospectPad::joyCallback: num_of_axes = %d, buttons = %d", (int)(joy->axes.size()), (int)(joy->buttons.size()));
 }
 
+void RobospectPad::controllerStateCallback(const robospect_msgs::State::ConstPtr& state)
+{
+	controller_state_msg = *state;
+	
+	if(controller_state_msg.control_mode == "VELOCITY")
+		control_crane_enabled = true;
+	else
+		control_crane_enabled = false;
+}
+
 //! Controls the actions and states
 void RobospectPad::ControlLoop(){
 
-	double desired_linear_speed = 0.0, desired_angular_position = 0.0;
+	desired_linear_speed = 0.0;
+	desired_angular_position = 0.0;
+	desired_linear_arm_speed = 0.0;
+	desired_angular_arm_speed = 0.0;
+	
 	ackermann_msgs::AckermannDriveStamped ref_msg;
-
-	double desired_linear_arm_speed = 0.0, desired_angular_arm_speed = 0.0;
+	robotnik_msgs::ptz ptz_msg;
+	ptz_msg.relative = true;
 
 	ros::Rate r(desired_freq_);
 
@@ -417,16 +478,7 @@ void RobospectPad::ControlLoop(){
 				// Publish into command_vel topic
 				vel_pub_.publish(ref_msg);
 
-				if(vButtons[button_speed_up_].IsReleased()){
-					current_speed_lvl += 0.1;
-					if(current_speed_lvl > 1.0)
-						current_speed_lvl = 1.0;
-				}
-				if(vButtons[button_speed_down_].IsReleased()){
-					current_speed_lvl -= 0.1;
-					if(current_speed_lvl < 0.0)
-						current_speed_lvl = 0.0;
-				}
+				
 
 			}else if(vButtons[button_dead_man_].IsReleased()){
 				ref_msg.header.stamp = ros::Time::now();
@@ -439,69 +491,136 @@ void RobospectPad::ControlLoop(){
 				//ROS_INFO("RobospectPad::ControlLoop: Deadman released!");
 				vel_pub_.publish(ref_msg);// Publish into command_vel topic
 			}
-
-			if(vButtons[button_control_mode_].IsReleased()){
-				robospect_msgs::SetControlMode srv;
+			/* Mode Selection */
+			if(vButtons[button_control_mode_velocity_].IsReleased()){
 				srv.request.mode = "VELOCITY";
 				if(set_control_mode_srv_.call(srv) != true)
 					ROS_ERROR("robospect_pad::ControlLoop: Error calling set control mode service");
 			}
-			if(vButtons[button_arm_dead_man_].IsPressed()){
-				desired_linear_arm_speed = max_linear_arm_speed_ * current_arm_speed_lvl * fAxes[axis_linear_speed_];
-				//desired_angular_arm_speed = max_angular_arm_speed_ * current_arm_speed_lvl * fAxes[axis_angular_position_];
+			if(vButtons[button_control_mode_position_].IsReleased()){
+				srv.request.mode = "POSITION";
+				if(set_control_mode_srv_.call(srv) != true)
+					ROS_ERROR("robospect_pad::ControlLoop: Error calling set control mode service");
+			}
+			// Select the arm joint to move
+			if(vButtons[button_joint_up_].IsReleased()){
+				joint_index += 1;
+				if(joint_index >= joint_vector_length)
+					joint_index = joint_vector_length -1;
+				ROS_INFO("robospect_pad: joint up: %d", joint_index);
+			}
+			if(vButtons[button_joint_down_].IsReleased()){
+				joint_index -= 1;
+				if(joint_index < 0)
+					joint_index = 0;
+				ROS_INFO("robospect_pad: joint down: %d", joint_index);
+			}
+			if(vButtons[button_speed_up_].IsReleased()){
+				current_speed_lvl += 0.1;
+				if(current_speed_lvl > 1.0)
+					current_speed_lvl = 1.0;
+			}
+			if(vButtons[button_speed_down_].IsReleased()){
+				current_speed_lvl -= 0.1;
+				if(current_speed_lvl < 0.0)
+					current_speed_lvl = 0.0;
+			}
+			/* Crane control */
+			if(control_crane_enabled and not vButtons[button_dead_man_].IsPressed()){
+				if(vButtons[button_arm_dead_man_].IsPressed()){
+					desired_linear_arm_speed = max_linear_arm_speed_ * current_arm_speed_lvl * fAxes[axis_linear_speed_];
+					//desired_angular_arm_speed = max_angular_arm_speed_ * current_arm_speed_lvl * fAxes[axis_angular_position_];
 
 
-				joints_msg.header.stamp = ros::Time::now();
-				joints_msg.name.push_back(JointNames[joint_index]);
-				joints_msg.velocity.push_back(desired_linear_arm_speed);
-				joints_msg.position.push_back(0.0);
-				joints_msg.effort.push_back(0.0);
-				
-				// Publish into command_vel topic
-				joint_pub_.publish(joints_msg);
-
-				// speed up or down the arm joints movement
-				if(vButtons[button_speed_up_].IsReleased()){
-					current_arm_speed_lvl += 0.1;
-					if(current_arm_speed_lvl > 1.0)
-						current_arm_speed_lvl = 1.0;
-				}
-				if(vButtons[button_speed_down_].IsReleased()){
-					current_arm_speed_lvl -= 0.1;
-					if(current_arm_speed_lvl < 0.0)
-						current_arm_speed_lvl = 0.0;
-				}
-				// Select the arm joint to move
-				if(vButtons[button_joint_up_].IsReleased()){
-					joint_index += 1;
-					if(joint_index >= joint_vector_length)
-						joint_index = joint_vector_length -1;
-					ROS_INFO("robospect_pad: joint up: %d", joint_index);
-				}
-				if(vButtons[button_joint_down_].IsReleased()){
-					joint_index -= 1;
-					if(joint_index < 0)
-						joint_index = 0;
-					ROS_INFO("robospect_pad: joint down: %d", joint_index);
-				}
-				
-
-			}else if(vButtons[button_dead_man_].IsReleased()){
-
-				joints_msg.header.stamp = ros::Time::now();
-
-				for (size_t i = 0; i < joint_vector_length; i++) {
+					joints_msg.header.stamp = ros::Time::now();
 					joints_msg.name.push_back(JointNames[joint_index]);
-					joints_msg.velocity.push_back(0.0);
+					joints_msg.velocity.push_back(desired_linear_arm_speed);
 					joints_msg.position.push_back(0.0);
 					joints_msg.effort.push_back(0.0);
+					
+					// Publish into command_vel topic
+					joint_pub_.publish(joints_msg);
+
+					// speed up or down the arm joints movement
+					if(vButtons[button_speed_up_].IsReleased()){
+						current_arm_speed_lvl += 0.1;
+						if(current_arm_speed_lvl > 1.0)
+							current_arm_speed_lvl = 1.0;
+					}
+					if(vButtons[button_speed_down_].IsReleased()){
+						current_arm_speed_lvl -= 0.1;
+						if(current_arm_speed_lvl < 0.0)
+							current_arm_speed_lvl = 0.0;
+					}
+					
+					
+
+				}else if(vButtons[button_dead_man_].IsReleased()){
+
+					joints_msg.header.stamp = ros::Time::now();
+
+					for (size_t i = 0; i < joint_vector_length; i++) {
+						joints_msg.name.push_back(JointNames[joint_index]);
+						joints_msg.velocity.push_back(0.0);
+						joints_msg.position.push_back(0.0);
+						joints_msg.effort.push_back(0.0);
+					}
+
+					//ROS_INFO("RobospectPad::ControlLoop: Deadman released!");
+					joint_pub_.publish(joints_msg);// Publish into command_vel topic
 				}
-
-				//ROS_INFO("RobospectPad::ControlLoop: Deadman released!");
-				joint_pub_.publish(joints_msg);// Publish into command_vel topic
+			}else if(vButtons[button_arm_dead_man_].IsPressed())
+				ROS_WARN("robospect_pad: robospect controller is not in VELOCITY control mode");
+			
+			// PTZ
+			if(vButtons[button_zoom_dead_man_].IsPressed()){
+				if(vButtons[ptz_zoom_in_].IsReleased()){
+					ROS_WARN("robospect_pad: zoom in");
+					ptz_msg.tilt = 0.0;
+					ptz_msg.pan = 0.0;
+					ptz_msg.zoom = zoom_inc_;
+					ptz_pub_.publish(ptz_msg);
+				}else if(vButtons[ptz_zoom_out_].IsReleased()){
+					ROS_WARN("robospect_pad: zoom out");
+					ptz_msg.tilt = 0.0;
+					ptz_msg.pan = 0.0;
+					ptz_msg.zoom = -zoom_inc_;
+					
+					ptz_pub_.publish(ptz_msg);
+				}
+			}else{
+				if(vButtons[ptz_tilt_up_].IsReleased()){
+					//ROS_WARN("robospect_pad: ptz up");
+					ptz_msg.tilt = pantilt_inc_;
+					ptz_msg.pan = 0.0;
+					ptz_msg.zoom = 0.0;
+					ptz_pub_.publish(ptz_msg);
+				}
+				if(vButtons[ptz_tilt_down_].IsReleased()){
+					//ROS_WARN("robospect_pad: ptz down");
+					ptz_msg.tilt = -pantilt_inc_;
+					ptz_msg.pan = 0.0;
+					ptz_msg.zoom = 0.0;
+					ptz_pub_.publish(ptz_msg);
+				}
+				if(vButtons[ptz_pan_right_].IsReleased()){
+					//ROS_WARN("robospect_pad: ptz right");
+					ptz_msg.tilt = 0.0;
+					ptz_msg.pan = pantilt_inc_;
+					ptz_msg.zoom = 0.0;
+					ptz_pub_.publish(ptz_msg);
+				}
+				if(vButtons[ptz_pan_left_].IsReleased()){
+					//ROS_WARN("robospect_pad: ptz left");
+					ptz_msg.tilt = 0.0;
+					ptz_msg.pan = -pantilt_inc_;
+					ptz_msg.zoom = 0.0;
+					ptz_pub_.publish(ptz_msg);
+				}
 			}
+			
+			
 		}
-
 		ros::spinOnce();
 		r.sleep();
 	}

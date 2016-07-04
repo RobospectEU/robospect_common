@@ -10,6 +10,7 @@ find_package(catkin REQUIRED COMPONENTS
   robotnik_msgs
   roscpp
   sensor_msgs
+  robospect_msgs
 )
 
 catkin_package(
