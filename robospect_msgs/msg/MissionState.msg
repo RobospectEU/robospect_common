@@ -11,6 +11,7 @@ float32 minimum_crack_length
 float32 max_cracks
 string mission_command
 MissionPoint[] points
+int16 current_point
 
 #Vehicle State
 PlatformState vehicle_state
