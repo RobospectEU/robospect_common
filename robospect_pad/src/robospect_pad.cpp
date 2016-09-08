@@ -53,6 +53,7 @@
 #include <robospect_msgs/SetControlMode.h>
 #include <robospect_msgs/PadStatus.h>
 #include <robospect_msgs/State.h>
+#include <keyboard/Key.h>
 
 
 
@@ -76,12 +77,25 @@
 #define DEFAULT_SCALE_ANGULAR		1.0
 
 #define DEFAULT_JOY					"/joy"
-#define DEFAULT_HZ					50.0
+#define DEFAULT_HZ					40.0
 
 #define NUMBER_OF_DRIVEN_JOINTS   	7//
 
 #define DEFAULT_PANTILT_INC			1.0
 #define DEFAULT_ZOOM_INC			200.0
+
+#define PA10_COMMAND_UPDOWN			1
+#define PA10_COMMAND_LEFTRIGHT		2
+#define PA10_COMMAND_FWDBWD			3
+#define PA10_COMMAND_YAW			4
+#define PA10_COMMAND_PITCH			5
+#define PA10_COMMAND_ROLL			6
+#define PA10_COMMAND_START			7
+#define PA10_COMMAND_STOP			8
+#define PA10_COMMAND_SPEED_UP		9
+#define PA10_COMMAND_SPEED_DOWN		10
+
+#define DEFAULT_PA10_AXIS_DEADZONE	0.15
 
 //! Class to save the state of the buttons
 class Button{
@@ -96,14 +110,14 @@ class Button{
 	}
 	//! Set the button as 'pressed'/'released'
 	void Press(int value){
-		if(iPressed and !value){
+		if(iPressed and value==0){
 			bReleased = true;
+			//ROS_INFO("Released");
 
-		}else if(bReleased and value)
+		}else if(bReleased and value==1)
 			bReleased = false;
-
+			
 		iPressed = value;
-
 	}
 
 	int IsPressed(){
@@ -113,6 +127,7 @@ class Button{
 	bool IsReleased(){
 		bool b = bReleased;
 		bReleased = false;
+		//iPressed = 0;
 		return b;
 	}
 };
@@ -137,12 +152,18 @@ private:
 	//! Enables/Disables the joystick
 	bool EnableDisable(robotnik_msgs::enable_disable::Request &req, robotnik_msgs::enable_disable::Response &res );
 	void Update();
+	int sendPA10Command(int command_type, int value, bool release);
 
 
 private:
 	ros::NodeHandle nh_, pnh_;
 
 	int axis_linear_speed_, axis_angular_position_;
+	
+	int axis_pa10_arm_up_down_, axis_pa10_arm_left_right_, axis_pa10_arm_fwd_bwd_;
+	int button_pa10_arm_up_, button_pa10_arm_down_, button_pa10_arm_left_, button_pa10_arm_right_;
+	int axis_pa10_arm_yaw_, axis_pa10_arm_pitch_, axis_pa10_arm_roll_;
+	
 	double l_scale_, a_scale_;
 	double current_speed_lvl;
 	double current_arm_speed_lvl;
@@ -154,6 +175,9 @@ private:
 	double desired_freq_;
 	//joint index number
 	int joint_index;
+	//! deadzone when controlling the arm
+	double pa10_control_deadzone_;
+	//[0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1, 0]
 	
 	robospect_msgs::SetControlMode srv;
 	robospect_msgs::State controller_state_msg;
@@ -174,6 +198,9 @@ private:
 	ros::Publisher joint_pub_;
 	//! Publisher of the ptz camera
 	ros::Publisher ptz_pub_;
+	//! Publish key ops to move the arm
+	ros::Publisher keydown_pub_;
+	ros::Publisher keyup_pub_;
 	
 	//! Name of the joint controller topic
 	std::string  joint_state_topic;
@@ -181,6 +208,8 @@ private:
 	std::string  controller_state_topic;
 	//! PTZ camera control topic name
 	std::string  ptz_camera_topic_;
+	std::string  keydown_topic_;
+	std::string  keydup_topic_;
 	//! // Name of the joystick's topic
 	std::string  joy_topic_;
 	//! Name of the topic where it will be publishing the velocity
@@ -193,6 +222,9 @@ private:
 	ros::ServiceServer enable_disable_srv_;
 	//! Service to modify the pad control mode
 	ros::ServiceClient set_control_mode_srv_;
+	//! commands the pa10 arm
+	ros::ServiceClient init_platform_srv_;
+	ros::ServiceClient reset_encoder_platform_srv_;
 	//! Name of the service to change the mode
 	std::string set_control_mode_service_name_;
 
@@ -209,6 +241,13 @@ private:
 	int button_dead_man_;
 	//! Number of the ARM DEADMAN button
 	int button_arm_dead_man_;
+	//! Number of the PA10 ARM DEADMAN button
+	int button_pa10_arm_dead_man_;
+	int button_pa10_arm_euler_dead_man_;
+	int button_pa10_arm_start_;
+	int button_pa10_arm_stop_;
+	int button_pa10_arm_speed_up_;
+	int button_pa10_arm_speed_down_;
 	//! Number of the deadman button to set the zoom
 	int button_zoom_dead_man_;
 	//! Number of the button for increase or decrease the speed max of the joystick
@@ -282,8 +321,16 @@ RobospectPad::RobospectPad():
 	pnh_.param("joint_state_topic", joint_state_topic, std::string ("/robospect_platform_controller/command"));
 	pnh_.param("controller_state_topic", controller_state_topic, std::string ("/robospect_platform_controller/state"));
 	pnh_.param("ptz_camera_topic", ptz_camera_topic_, std::string ("/axis_v2/ptz_command"));
+	pnh_.param("keydown_topic", keydown_topic_, std::string ("keyboard/keydown"));
+	pnh_.param("keyup_topic", keydup_topic_, std::string ("keyboard/keyup"));
 
 	pnh_.param("button_arm_dead_man", button_arm_dead_man_, button_arm_dead_man_);
+	pnh_.param("button_pa10_arm_dead_man", button_pa10_arm_dead_man_, 9);
+	pnh_.param("button_pa10_arm_euler_dead_man", button_pa10_arm_euler_dead_man_, 8);
+	pnh_.param("button_pa10_start", button_pa10_arm_start_, 3);
+	pnh_.param("button_pa10_stop", button_pa10_arm_stop_, 0);
+	pnh_.param("button_pa10_arm_speed_up", button_pa10_arm_speed_up_, 12);
+	pnh_.param("button_pa10_arm_speed_down", button_pa10_arm_speed_down_, 14);
 	pnh_.param("button_joint_up", button_joint_up_, button_joint_up_);
 	pnh_.param("button_joint_down", button_joint_down_, button_joint_down_);
 	pnh_.param("button_control_mode_position", button_control_mode_position_, 0);
@@ -298,6 +345,16 @@ RobospectPad::RobospectPad():
 	pnh_.param("max_linear_speed_", max_linear_arm_speed_, DEFAULT_MAX_LINEAR_ARM_SPEED);
 	pnh_.param("axis_linear_speed", axis_linear_speed_, DEFAULT_AXIS_LINEAR_X);
 	pnh_.param("axis_angular_position", axis_angular_position_, DEFAULT_AXIS_ANGULAR);
+	pnh_.param("axis_pa10_arm_up_down", axis_pa10_arm_up_down_, axis_pa10_arm_up_down_);
+	pnh_.param("axis_pa10_arm_left_right", axis_pa10_arm_left_right_, axis_pa10_arm_left_right_);
+	pnh_.param("axis_pa10_arm_fwd_bwd", axis_pa10_arm_fwd_bwd_, axis_pa10_arm_fwd_bwd_);
+	pnh_.param("axis_pa10_arm_yaw", axis_pa10_arm_yaw_, axis_pa10_arm_yaw_);
+	pnh_.param("axis_pa10_arm_pitch", axis_pa10_arm_pitch_, axis_pa10_arm_pitch_);
+	pnh_.param("axis_pa10_arm_roll", axis_pa10_arm_roll_, axis_pa10_arm_roll_);
+	pnh_.param("button_pa10_arm_down", button_pa10_arm_down_, 6);
+	pnh_.param("button_pa10_arm_up", button_pa10_arm_up_, 4);
+	pnh_.param("button_pa10_arm_left", button_pa10_arm_left_, 7);
+	pnh_.param("button_pa10_arm_right", button_pa10_arm_right_, 5);
 	
 	ROS_INFO("axis_linear_speed_ = %d, axis_angular = %d", axis_linear_speed_, axis_angular_position_);
 	ROS_INFO("max_linear_speed = %lf, max_angular_speed = %lf", max_linear_speed_, max_angular_position_);
@@ -317,6 +374,9 @@ RobospectPad::RobospectPad():
 	pnh_.param("button_ptz_zoom_out", ptz_zoom_out_, ptz_zoom_out_);
 	pnh_.param("pantilt_inc", pantilt_inc_, DEFAULT_PANTILT_INC);
 	pnh_.param("zoom_inc", zoom_inc_, DEFAULT_ZOOM_INC);
+	
+	
+	pnh_.param("pa10_control_deadzone", pa10_control_deadzone_, DEFAULT_PA10_AXIS_DEADZONE);
 
 	// CRANE JOINT names
 	pnh_.param("Joints_vector_length", joint_vector_length, 6);
@@ -332,6 +392,7 @@ RobospectPad::RobospectPad():
 
 	ROS_INFO("RobospectPad num_of_buttons_ = %d, axes = %d, topic controller: %s, hz = %.2lf", num_of_buttons_, num_of_axes_, cmd_topic_vel.c_str(), desired_freq_);
 	ROS_INFO("RobospectPad: arm deadman button = %d", button_arm_dead_man_);
+	ROS_INFO("RobospectPad: pa10 arm deadman button = %d , %d", button_pa10_arm_dead_man_, button_pa10_arm_euler_dead_man_);
 
 	for(int i = 0; i < MAX_NUM_OF_BUTTONS_PS3; i++){
 		Button b;
@@ -345,15 +406,19 @@ RobospectPad::RobospectPad():
 	// Publishers
 	this->vel_pub_ = nh_.advertise<ackermann_msgs::AckermannDriveStamped>(this->cmd_topic_vel, 1);
 	this->joint_pub_ = nh_.advertise<sensor_msgs::JointState>(this->joint_state_topic, 1);
-	this->state_pub_ = nh_.advertise<robospect_msgs::PadStatus>(this->topic_state_, 1);
-	this->ptz_pub_ = nh_.advertise<robotnik_msgs::ptz>(this->ptz_camera_topic_, 1);
+	this->state_pub_ = pnh_.advertise<robospect_msgs::PadStatus>("state", 1);
+	this->ptz_pub_ = nh_.advertise<robotnik_msgs::ptz>(this->ptz_camera_topic_, 10);
+	this->keydown_pub_ = nh_.advertise<keyboard::Key>(this->keydown_topic_, 10);
+	this->keyup_pub_ = nh_.advertise<keyboard::Key>(this->keydup_topic_, 10);
 
  	// Listen through the node handle sensor_msgs::Joy messages from joystick
-	joy_sub_ = nh_.subscribe<sensor_msgs::Joy>(joy_topic_, 1, &RobospectPad::joyCallback, this);
+	joy_sub_ = nh_.subscribe<sensor_msgs::Joy>(joy_topic_, 10, &RobospectPad::joyCallback, this);
 	controller_state_sub_ = nh_.subscribe<robospect_msgs::State>(controller_state_topic, 1, &RobospectPad::controllerStateCallback, this);
 
- 	// Request service to activate / deactivate digital I/O
+ 	// 
 	set_control_mode_srv_ = nh_.serviceClient<robospect_msgs::SetControlMode>(set_control_mode_service_name_);
+	init_platform_srv_ = nh_.serviceClient<std_srvs::Empty>("/robospect_platform_controller/initialize_modbus_controller");
+	reset_encoder_platform_srv_ = nh_.serviceClient<std_srvs::Empty>("/robospect_platform_controller/reset_steering_encoder");
 
 	// Diagnostics
 	updater_pad.setHardwareID("RobospectPad");
@@ -439,6 +504,78 @@ void RobospectPad::controllerStateCallback(const robospect_msgs::State::ConstPtr
 		control_crane_enabled = false;
 }
 
+
+int RobospectPad::sendPA10Command(int command_type, int value, bool release){
+	keyboard::Key msg;
+	msg.header.stamp = ros::Time::now();
+	/*
+	keyboard::Key::KEY_SPACE
+	
+	*/
+	
+	
+	switch(command_type){
+		case PA10_COMMAND_UPDOWN:
+			if(value > 0)
+				msg.code = keyboard::Key::KEY_w;
+			if(value < 0)
+				msg.code = keyboard::Key::KEY_s;
+		break;
+		case PA10_COMMAND_LEFTRIGHT:
+			if(value > 0)
+				msg.code = keyboard::Key::KEY_a;
+			if(value < 0)
+				msg.code = keyboard::Key::KEY_d;
+		break;
+		case PA10_COMMAND_FWDBWD:
+			if(value > 0)
+				msg.code = keyboard::Key::KEY_t;
+			if(value < 0)
+				msg.code = keyboard::Key::KEY_g;
+		break;
+		case PA10_COMMAND_YAW:
+			if(value > 0)
+				msg.code = keyboard::Key::KEY_q;
+			if(value < 0)
+				msg.code = keyboard::Key::KEY_e;
+		break;
+		case PA10_COMMAND_PITCH:
+			if(value > 0)
+				msg.code = keyboard::Key::KEY_LEFT;
+			if(value < 0)
+				msg.code = keyboard::Key::KEY_RIGHT;
+		break;
+		case PA10_COMMAND_ROLL:
+			if(value > 0)
+				msg.code = keyboard::Key::KEY_UP;
+			if(value < 0)
+				msg.code = keyboard::Key::KEY_DOWN;
+		break;
+		
+		case PA10_COMMAND_START:
+			msg.code = keyboard::Key::KEY_SPACE;
+		break;
+		case PA10_COMMAND_STOP:
+			msg.code = keyboard::Key::KEY_p;
+		break;
+		case PA10_COMMAND_SPEED_UP:
+			msg.code = keyboard::Key::KEY_o;
+		break;
+		case PA10_COMMAND_SPEED_DOWN:
+			msg.code = keyboard::Key::KEY_k;
+		break;
+	}
+	
+	if(release){
+		keyup_pub_.publish(msg);
+		//usleep(100000);
+		//keyup_pub_.publish(msg);
+	}else
+		keydown_pub_.publish(msg);
+		
+	
+}
+
 //! Controls the actions and states
 void RobospectPad::ControlLoop(){
 
@@ -461,7 +598,20 @@ void RobospectPad::ControlLoop(){
 
 			sensor_msgs::JointState joints_msg;
 
+			// MOBILE PLATFORM CONTROL
 			if(vButtons[button_dead_man_].IsPressed()){
+				
+				if(vButtons[button_speed_up_].IsReleased()){
+					current_speed_lvl += 0.1;
+					if(current_speed_lvl > 1.0)
+						current_speed_lvl = 1.0;
+				}
+				if(vButtons[button_speed_down_].IsReleased()){
+					current_speed_lvl -= 0.1;
+					if(current_speed_lvl < 0.0)
+						current_speed_lvl = 0.0;
+				}
+				
 				ref_msg.header.stamp = ros::Time::now();
 				ref_msg.drive.jerk = 0.0;
 				ref_msg.drive.acceleration = 0.0;
@@ -478,8 +628,6 @@ void RobospectPad::ControlLoop(){
 				// Publish into command_vel topic
 				vel_pub_.publish(ref_msg);
 
-				
-
 			}else if(vButtons[button_dead_man_].IsReleased()){
 				ref_msg.header.stamp = ros::Time::now();
 				ref_msg.drive.jerk = 0.0;
@@ -491,43 +639,59 @@ void RobospectPad::ControlLoop(){
 				//ROS_INFO("RobospectPad::ControlLoop: Deadman released!");
 				vel_pub_.publish(ref_msg);// Publish into command_vel topic
 			}
-			/* Mode Selection */
-			if(vButtons[button_control_mode_velocity_].IsReleased()){
-				srv.request.mode = "VELOCITY";
-				if(set_control_mode_srv_.call(srv) != true)
-					ROS_ERROR("robospect_pad::ControlLoop: Error calling set control mode service");
+			
+			if(vButtons[button_pa10_arm_euler_dead_man_].IsPressed()){
+				std_srvs::Empty srv_;
+				if(vButtons[button_pa10_arm_start_].IsReleased()){
+					ROS_INFO("robospect_pad: initializing platform");
+					init_platform_srv_.call(srv_);
+				}
+				if(vButtons[button_pa10_arm_stop_].IsReleased()){
+					ROS_INFO("robospect_pad: reseting encoders");
+					reset_encoder_platform_srv_.call(srv_);
+				}
+				
 			}
-			if(vButtons[button_control_mode_position_].IsReleased()){
-				srv.request.mode = "POSITION";
-				if(set_control_mode_srv_.call(srv) != true)
-					ROS_ERROR("robospect_pad::ControlLoop: Error calling set control mode service");
-			}
-			// Select the arm joint to move
-			if(vButtons[button_joint_up_].IsReleased()){
-				joint_index += 1;
-				if(joint_index >= joint_vector_length)
-					joint_index = joint_vector_length -1;
-				ROS_INFO("robospect_pad: joint up: %d", joint_index);
-			}
-			if(vButtons[button_joint_down_].IsReleased()){
-				joint_index -= 1;
-				if(joint_index < 0)
-					joint_index = 0;
-				ROS_INFO("robospect_pad: joint down: %d", joint_index);
-			}
-			if(vButtons[button_speed_up_].IsReleased()){
-				current_speed_lvl += 0.1;
-				if(current_speed_lvl > 1.0)
-					current_speed_lvl = 1.0;
-			}
-			if(vButtons[button_speed_down_].IsReleased()){
-				current_speed_lvl -= 0.1;
-				if(current_speed_lvl < 0.0)
-					current_speed_lvl = 0.0;
-			}
-			/* Crane control */
-			if(control_crane_enabled and not vButtons[button_dead_man_].IsPressed()){
-				if(vButtons[button_arm_dead_man_].IsPressed()){
+			
+			
+			// CRANE CONTROL
+			/*if(vButtons[button_arm_dead_man_].IsPressed()){
+				if(vButtons[button_control_mode_velocity_].IsReleased()){
+					srv.request.mode = "VELOCITY";
+					if(set_control_mode_srv_.call(srv) != true)
+						ROS_ERROR("robospect_pad::ControlLoop: Error calling set control mode service");
+				}
+				if(vButtons[button_control_mode_position_].IsReleased()){
+					srv.request.mode = "POSITION";
+					if(set_control_mode_srv_.call(srv) != true)
+						ROS_ERROR("robospect_pad::ControlLoop: Error calling set control mode service");
+				}
+				// Select the arm joint to move
+				if(vButtons[button_joint_up_].IsReleased()){
+					joint_index += 1;
+					if(joint_index >= joint_vector_length)
+						joint_index = joint_vector_length -1;
+					ROS_INFO("robospect_pad: joint up: %d", joint_index);
+				}
+				if(vButtons[button_joint_down_].IsReleased()){
+					joint_index -= 1;
+					if(joint_index < 0)
+						joint_index = 0;
+					ROS_INFO("robospect_pad: joint down: %d", joint_index);
+				}
+				if(vButtons[button_speed_up_].IsReleased()){
+					current_speed_lvl += 0.1;
+					if(current_speed_lvl > 1.0)
+						current_speed_lvl = 1.0;
+				}
+				if(vButtons[button_speed_down_].IsReleased()){
+					current_speed_lvl -= 0.1;
+					if(current_speed_lvl < 0.0)
+						current_speed_lvl = 0.0;
+				}
+			
+				if(control_crane_enabled){
+					
 					desired_linear_arm_speed = max_linear_arm_speed_ * current_arm_speed_lvl * fAxes[axis_linear_speed_];
 					//desired_angular_arm_speed = max_angular_arm_speed_ * current_arm_speed_lvl * fAxes[axis_angular_position_];
 
@@ -552,72 +716,293 @@ void RobospectPad::ControlLoop(){
 						if(current_arm_speed_lvl < 0.0)
 							current_arm_speed_lvl = 0.0;
 					}
-					
-					
+							
+				}		
+			}else if(vButtons[button_arm_dead_man_].IsReleased() and control_crane_enabled){
 
-				}else if(vButtons[button_dead_man_].IsReleased()){
+				joints_msg.header.stamp = ros::Time::now();
 
-					joints_msg.header.stamp = ros::Time::now();
-
-					for (size_t i = 0; i < joint_vector_length; i++) {
-						joints_msg.name.push_back(JointNames[joint_index]);
-						joints_msg.velocity.push_back(0.0);
-						joints_msg.position.push_back(0.0);
-						joints_msg.effort.push_back(0.0);
-					}
-
-					//ROS_INFO("RobospectPad::ControlLoop: Deadman released!");
-					joint_pub_.publish(joints_msg);// Publish into command_vel topic
+				for (size_t i = 0; i < joint_vector_length; i++) {
+					joints_msg.name.push_back(JointNames[joint_index]);
+					joints_msg.velocity.push_back(0.0);
+					joints_msg.position.push_back(0.0);
+					joints_msg.effort.push_back(0.0);
 				}
-			}else if(vButtons[button_arm_dead_man_].IsPressed())
-				ROS_WARN("robospect_pad: robospect controller is not in VELOCITY control mode");
+
+				//ROS_INFO("RobospectPad::ControlLoop: Deadman released!");
+				joint_pub_.publish(joints_msg);// Publish into command_vel topic
+			}
+			*/
+			//
+			// PA10 ARM
+			if(vButtons[button_pa10_arm_dead_man_].IsPressed()){
+				//ROS_INFO("robospect_pad: start arm");
+
+				if(vButtons[button_pa10_arm_start_].IsReleased()){
+					ROS_INFO("robospect_pad: start arm");
+					sendPA10Command(PA10_COMMAND_START, 1, false);
+				}
+				if(vButtons[button_pa10_arm_stop_].IsReleased()){
+					sendPA10Command(PA10_COMMAND_STOP, 1, false);
+					ROS_INFO("robospect_pad: stop arm");
+				}
+				if(vButtons[button_pa10_arm_speed_up_].IsReleased()){
+					sendPA10Command(PA10_COMMAND_SPEED_UP, 1, false);
+					ROS_INFO("robospect_pad: speed up arm");
+				}
+				if(vButtons[button_pa10_arm_speed_down_].IsReleased()){
+					sendPA10Command(PA10_COMMAND_SPEED_DOWN, 1, false);
+					ROS_INFO("robospect_pad: speed down arm");
+				}
+				
+				/*
+				 * if(vButtons[button_pa10_arm_euler_dead_man_].IsPressed()){
+					
+					// Stops XYZ cartesian movement
+					sendPA10Command(PA10_COMMAND_FWDBWD, 1, true);
+					sendPA10Command(PA10_COMMAND_FWDBWD, -1, true);
+					sendPA10Command(PA10_COMMAND_LEFTRIGHT, 1, true);
+					sendPA10Command(PA10_COMMAND_LEFTRIGHT, -1, true);
+					sendPA10Command(PA10_COMMAND_UPDOWN, 1, true);
+					sendPA10Command(PA10_COMMAND_UPDOWN, -1, true);
+					
+					// YAW
+					if(fabs(fAxes[axis_pa10_arm_yaw_]) > pa10_control_deadzone_){
+						if(fAxes[axis_pa10_arm_yaw_] > 0){
+							sendPA10Command(PA10_COMMAND_YAW, -1, false);
+						}else{						
+							sendPA10Command(PA10_COMMAND_YAW, 1, false);
+						}
+					}else{
+						sendPA10Command(PA10_COMMAND_YAW, 1, true);
+						sendPA10Command(PA10_COMMAND_YAW, -1, true);
+					}
+					// PITCH
+					if(fabs(fAxes[axis_pa10_arm_pitch_]) > pa10_control_deadzone_){
+						if(fAxes[axis_pa10_arm_pitch_] > 0){
+							sendPA10Command(PA10_COMMAND_PITCH, 1, false);
+						}else{						
+							sendPA10Command(PA10_COMMAND_PITCH, -1, false);
+						}
+					}else{
+						sendPA10Command(PA10_COMMAND_PITCH, 1, true);
+						sendPA10Command(PA10_COMMAND_PITCH, -1, true);
+					}
+					// ROLL
+					if(fabs(fAxes[axis_pa10_arm_roll_]) > pa10_control_deadzone_){
+						if(fAxes[axis_pa10_arm_roll_] > 0){
+							sendPA10Command(PA10_COMMAND_ROLL, -1, false);
+						}else{						
+							sendPA10Command(PA10_COMMAND_ROLL, 1, false);
+						}
+					}else{
+						sendPA10Command(PA10_COMMAND_ROLL, 1, true);
+						sendPA10Command(PA10_COMMAND_ROLL, -1, true);
+					}
+					
+					
+				}else if(vButtons[button_pa10_arm_euler_dead_man_].IsReleased()){
+					ROS_INFO("PA10 euler deadman released");
+					sendPA10Command(PA10_COMMAND_YAW, 1, true);
+					sendPA10Command(PA10_COMMAND_YAW, -1, true);
+					sendPA10Command(PA10_COMMAND_ROLL, 1, true);
+					sendPA10Command(PA10_COMMAND_ROLL, -1, true);
+					sendPA10Command(PA10_COMMAND_PITCH, 1, true);
+					sendPA10Command(PA10_COMMAND_PITCH, -1, true);
+					
+				}else{
+				* */
+				// UP DOWN
+				if(vButtons[button_pa10_arm_up_].IsPressed()){
+					sendPA10Command(PA10_COMMAND_UPDOWN, 1, false);
+				}
+				if(vButtons[button_pa10_arm_up_].IsReleased()){
+					sendPA10Command(PA10_COMMAND_UPDOWN, 1, true);
+				}
+				if(vButtons[button_pa10_arm_down_].IsPressed()){
+					sendPA10Command(PA10_COMMAND_UPDOWN, -1, false);
+				}
+				if(vButtons[button_pa10_arm_down_].IsReleased()){
+					sendPA10Command(PA10_COMMAND_UPDOWN, -1, true);
+				}
+				// LEFT RIGHT
+				if(vButtons[button_pa10_arm_left_].IsPressed()){
+					sendPA10Command(PA10_COMMAND_LEFTRIGHT, 1, false);
+				}
+				if(vButtons[button_pa10_arm_left_].IsReleased()){
+					sendPA10Command(PA10_COMMAND_LEFTRIGHT, 1, true);
+				}
+				if(vButtons[button_pa10_arm_right_].IsPressed()){
+					sendPA10Command(PA10_COMMAND_LEFTRIGHT, -1, false);
+				}
+				if(vButtons[button_pa10_arm_right_].IsReleased()){
+					sendPA10Command(PA10_COMMAND_LEFTRIGHT, -1, true);
+				}
+				/*
+				if(fabs(fAxes[axis_pa10_arm_up_down_]) > pa10_control_deadzone_){
+					if(fAxes[axis_pa10_arm_up_down_] > 0){
+						//ROS_INFO("updown up");
+						sendPA10Command(PA10_COMMAND_UPDOWN, 1, false);
+					}else{
+						//ROS_INFO("updown down");
+						sendPA10Command(PA10_COMMAND_UPDOWN, -1, false);
+					}
+				}else{
+					//ROS_INFO("updown zero");
+					sendPA10Command(PA10_COMMAND_UPDOWN, 1, true);
+					sendPA10Command(PA10_COMMAND_UPDOWN, -1, true);
+				}
+				// LEFT RIGHT
+				if(fabs(fAxes[axis_pa10_arm_left_right_]) > pa10_control_deadzone_){
+					if(fAxes[axis_pa10_arm_left_right_] > 0){
+						//ROS_INFO("lefright left");
+						sendPA10Command(PA10_COMMAND_LEFTRIGHT, 1, false);
+
+					}else{
+						//ROS_INFO("lefright right");
+						sendPA10Command(PA10_COMMAND_LEFTRIGHT, -1, false);
+					}
+				}else{
+					//ROS_INFO("lefright zero");
+					sendPA10Command(PA10_COMMAND_LEFTRIGHT, 1, true);
+					sendPA10Command(PA10_COMMAND_LEFTRIGHT, -1, true);
+				}
+				// FWD BWD
+				if(fabs(fAxes[axis_pa10_arm_fwd_bwd_]) > pa10_control_deadzone_){
+					if(fAxes[axis_pa10_arm_fwd_bwd_] > 0){
+						//ROS_INFO("fwdbwd fwd");
+						sendPA10Command(PA10_COMMAND_FWDBWD, 1, false);
+					}else{
+						//ROS_INFO("fwdbwd bwd");
+						sendPA10Command(PA10_COMMAND_FWDBWD, -1, false);
+					}
+				}else{
+					//ROS_INFO("fwdbwd zero");
+					sendPA10Command(PA10_COMMAND_FWDBWD, 1, true);
+					sendPA10Command(PA10_COMMAND_FWDBWD, -1, true);
+				}
+				* */
+				// angular vel i,j
+				
+				if(fabs(fAxes[axis_pa10_arm_fwd_bwd_]) > pa10_control_deadzone_){
+					if(fAxes[axis_pa10_arm_fwd_bwd_] > 0){
+						sendPA10Command(PA10_COMMAND_FWDBWD, 1, false);
+					}else{
+						sendPA10Command(PA10_COMMAND_FWDBWD, -1, false);
+					}
+				}else{
+					sendPA10Command(PA10_COMMAND_FWDBWD, 1, true);
+					sendPA10Command(PA10_COMMAND_FWDBWD, -1, true);
+				}
+					
+				// YAW
+				if(fabs(fAxes[axis_pa10_arm_yaw_]) > pa10_control_deadzone_){
+					if(fAxes[axis_pa10_arm_yaw_] > 0){
+						sendPA10Command(PA10_COMMAND_YAW, 1, false);
+					}else{						
+						sendPA10Command(PA10_COMMAND_YAW, -1, false);
+					}
+				}else{
+					sendPA10Command(PA10_COMMAND_YAW, 1, true);
+					sendPA10Command(PA10_COMMAND_YAW, -1, true);
+				}
+				// PITCH
+				if(fabs(fAxes[axis_pa10_arm_pitch_]) > pa10_control_deadzone_){
+					if(fAxes[axis_pa10_arm_pitch_] > 0){
+						sendPA10Command(PA10_COMMAND_PITCH, 1, false);
+					}else{						
+						sendPA10Command(PA10_COMMAND_PITCH, -1, false);
+					}
+				}else{
+					sendPA10Command(PA10_COMMAND_PITCH, 1, true);
+					sendPA10Command(PA10_COMMAND_PITCH, -1, true);
+				}
+				// ROLL
+				if(fabs(fAxes[axis_pa10_arm_roll_]) > pa10_control_deadzone_){
+					if(fAxes[axis_pa10_arm_roll_] > 0){
+						sendPA10Command(PA10_COMMAND_ROLL, -1, false);
+					}else{						
+						sendPA10Command(PA10_COMMAND_ROLL, 1, false);
+					}
+				}else{
+					sendPA10Command(PA10_COMMAND_ROLL, 1, true);
+					sendPA10Command(PA10_COMMAND_ROLL, -1, true);
+				}
+				
+				
+
+			}else if(vButtons[button_pa10_arm_dead_man_].IsReleased()){
+				ROS_INFO("PA10 deadman released");
+				/*ROS_INFO("updown zero");
+				ROS_INFO("leftright zero");
+				ROS_INFO("fwdbwd zero");*/
+				sendPA10Command(PA10_COMMAND_FWDBWD, 1, true);
+				sendPA10Command(PA10_COMMAND_FWDBWD, -1, true);
+				sendPA10Command(PA10_COMMAND_LEFTRIGHT, 1, true);
+				sendPA10Command(PA10_COMMAND_LEFTRIGHT, -1, true);
+				sendPA10Command(PA10_COMMAND_UPDOWN, 1, true);
+				sendPA10Command(PA10_COMMAND_UPDOWN, -1, true);
+				
+				//ROS_INFO("PA10 euler deadman released");
+				//if(vButtons[button_pa10_arm_euler_dead_man_].IsReleased()){
+				sendPA10Command(PA10_COMMAND_YAW, 1, true);
+				sendPA10Command(PA10_COMMAND_YAW, -1, true);
+				sendPA10Command(PA10_COMMAND_ROLL, 1, true);
+				sendPA10Command(PA10_COMMAND_ROLL, -1, true);
+				sendPA10Command(PA10_COMMAND_PITCH, 1, true);
+				sendPA10Command(PA10_COMMAND_PITCH, -1, true);
+				//}
+			}
 			
 			// PTZ
-			if(vButtons[button_zoom_dead_man_].IsPressed()){
-				if(vButtons[ptz_zoom_in_].IsReleased()){
-					ROS_WARN("robospect_pad: zoom in");
-					ptz_msg.tilt = 0.0;
-					ptz_msg.pan = 0.0;
-					ptz_msg.zoom = zoom_inc_;
-					ptz_pub_.publish(ptz_msg);
-				}else if(vButtons[ptz_zoom_out_].IsReleased()){
-					ROS_WARN("robospect_pad: zoom out");
-					ptz_msg.tilt = 0.0;
-					ptz_msg.pan = 0.0;
-					ptz_msg.zoom = -zoom_inc_;
-					
-					ptz_pub_.publish(ptz_msg);
+			if(not vButtons[button_pa10_arm_dead_man_].IsPressed())
+				if( vButtons[button_zoom_dead_man_].IsPressed()){
+					if(vButtons[ptz_zoom_in_].IsReleased()){
+						//ROS_WARN("robospect_pad: zoom in");
+						ptz_msg.tilt = 0.0;
+						ptz_msg.pan = 0.0;
+						ptz_msg.zoom = zoom_inc_;
+						ptz_pub_.publish(ptz_msg);
+					}else if(vButtons[ptz_zoom_out_].IsReleased()){
+						//ROS_WARN("robospect_pad: zoom out");
+						ptz_msg.tilt = 0.0;
+						ptz_msg.pan = 0.0;
+						ptz_msg.zoom = -zoom_inc_;
+						
+						ptz_pub_.publish(ptz_msg);
+					}
+				}else{
+					if(vButtons[ptz_tilt_up_].IsReleased()){
+						//ROS_WARN("robospect_pad: ptz up");
+						ptz_msg.tilt = pantilt_inc_;
+						ptz_msg.pan = 0.0;
+						ptz_msg.zoom = 0.0;
+						ptz_pub_.publish(ptz_msg);
+					}
+					if(vButtons[ptz_tilt_down_].IsReleased()){
+						//ROS_WARN("robospect_pad: ptz down");
+						ptz_msg.tilt = -pantilt_inc_;
+						ptz_msg.pan = 0.0;
+						ptz_msg.zoom = 0.0;
+						ptz_pub_.publish(ptz_msg);
+					}
+					if(vButtons[ptz_pan_right_].IsReleased()){
+						//ROS_WARN("robospect_pad: ptz right");
+						ptz_msg.tilt = 0.0;
+						ptz_msg.pan = pantilt_inc_;
+						ptz_msg.zoom = 0.0;
+						ptz_pub_.publish(ptz_msg);
+					}
+					if(vButtons[ptz_pan_left_].IsReleased()){
+						//ROS_WARN("robospect_pad: ptz left");
+						ptz_msg.tilt = 0.0;
+						ptz_msg.pan = -pantilt_inc_;
+						ptz_msg.zoom = 0.0;
+						ptz_pub_.publish(ptz_msg);
+					}
 				}
-			}else{
-				if(vButtons[ptz_tilt_up_].IsReleased()){
-					//ROS_WARN("robospect_pad: ptz up");
-					ptz_msg.tilt = pantilt_inc_;
-					ptz_msg.pan = 0.0;
-					ptz_msg.zoom = 0.0;
-					ptz_pub_.publish(ptz_msg);
-				}
-				if(vButtons[ptz_tilt_down_].IsReleased()){
-					//ROS_WARN("robospect_pad: ptz down");
-					ptz_msg.tilt = -pantilt_inc_;
-					ptz_msg.pan = 0.0;
-					ptz_msg.zoom = 0.0;
-					ptz_pub_.publish(ptz_msg);
-				}
-				if(vButtons[ptz_pan_right_].IsReleased()){
-					//ROS_WARN("robospect_pad: ptz right");
-					ptz_msg.tilt = 0.0;
-					ptz_msg.pan = pantilt_inc_;
-					ptz_msg.zoom = 0.0;
-					ptz_pub_.publish(ptz_msg);
-				}
-				if(vButtons[ptz_pan_left_].IsReleased()){
-					//ROS_WARN("robospect_pad: ptz left");
-					ptz_msg.tilt = 0.0;
-					ptz_msg.pan = -pantilt_inc_;
-					ptz_msg.zoom = 0.0;
-					ptz_pub_.publish(ptz_msg);
-				}
-			}
+			
+			
 			
 			
 		}
